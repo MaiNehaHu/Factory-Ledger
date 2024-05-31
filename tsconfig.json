@@ -1,0 +1,20 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "app/(tabs)/two.jsx",
+    "app/(tabs)/index.jsx",
+    "app/danaentry.jsx",
+    "app/soldentry.jsx",
+    "app/danaEntryDataPage.jsx"
+  ]
+}
