@@ -46,5 +46,7 @@ eas build -p android --profile preview
 
 ### When you do any changes, then run
 ```
-ease update
+npm install -g eas-cli
+eas update:configure
+eas update --branch main --message "Your update message"
 ```
