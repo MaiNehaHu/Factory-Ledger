@@ -18,7 +18,7 @@ npm start
 ```
 
 ### If not using Android Studio. Use your phone and install Expo Go App. Scan the QR. All Set.
-6. For installing Android Studio follow the link below.
+### For installing Android Studio follow the link below.
 [Expo Dev](https://docs.expo.dev/get-started/set-up-your-environment/?mode=expo-go&platform=android&device=simulated)
 
 ### We choose Navigation(typescript) that's why we did not need to setup the routes. To setup Navigation routes by ourselves in the app.
@@ -42,7 +42,7 @@ eas build -p android
 ```
 eas build -p android --profile preview
 ```
-
+### You'll get a QR  and click link to download the App
 
 ### When you do any changes, then run
 ```
