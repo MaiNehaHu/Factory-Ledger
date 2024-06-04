@@ -14,12 +14,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const editSellingDealerData = () => {
   const navigation = useNavigation();
   const route = useLocalSearchParams();
-  const { key, name, number } = route;
+  const { dealerkey, name, number } = route;
   const [dealerList, setDealerList] = useState([]);
   const [dealerName, setDealerName] = useState(name); // State to hold the dealer name
   const [dealerContact, setDealerContact] = useState(number); // State to hold the dealer Contact
 
-  console.log("in edit dealer page:", key);
+  console.log("in edit dealer page:", dealerkey);
 
   const handleSubmit = async () => {
     if (dealerName == "" || !dealerContact) {
@@ -28,7 +28,7 @@ const editSellingDealerData = () => {
     }
 
     try {
-      const dealerIndex = dealerList.findIndex((item) => item.key === key);
+      const dealerIndex = dealerList.findIndex((item) => item.key === dealerkey);
       const updatedDealerList = [...dealerList];
 
       if (dealerIndex !== -1) {
