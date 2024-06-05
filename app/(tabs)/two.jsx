@@ -41,9 +41,9 @@ export default function TabTwoScreen() {
     }
   }
 
-  async function handleDeleteDealer({ key }) {
+  async function handleDeleteDealer({ dealerkey }) {
     const result = dealerList.filter((item) => {
-      return item.key !== key;
+      return item.key !== dealerkey;
     });
 
     setDealerList(result);
@@ -120,6 +120,7 @@ export default function TabTwoScreen() {
                   };
                   setDisplayOptions(true);
                   setDelete_edit_data(params);
+                  console.log(delete_edit_data);
                 }}
               >
                 <Text style={styles.textStyle}>{data.dealerName}</Text>

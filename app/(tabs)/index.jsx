@@ -51,6 +51,7 @@ export default function TabOneScreen() {
   }
 
   async function handleDeleteDealer({ key }) {
+    console.log(key);
     const result = dealerList.filter((item) => {
       return item.key !== key;
     });
