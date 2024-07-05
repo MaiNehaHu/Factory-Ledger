@@ -50,3 +50,8 @@ npm install -g eas-cli
 eas update:configure
 eas update --branch main --message "Your update message"
 ```
+
+### Dependencies version changes
+```
+npx expo install --check
+```
