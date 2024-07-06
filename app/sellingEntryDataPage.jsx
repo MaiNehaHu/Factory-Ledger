@@ -43,7 +43,7 @@ const SellingEntryDataPage = () => {
 
   useEffect(() => {
     if (dealerName) {
-      navigation.setOptions({ title: `${dealerName} Dana Entry` });
+      navigation.setOptions({ title: `${dealerName} Sold Entry` });
     }
   }, [dealerName, navigation]);
 

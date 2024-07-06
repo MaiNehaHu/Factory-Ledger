@@ -23,6 +23,7 @@ const editDanaEntry = () => {
     dealerkey,
     dealerName,
     rate,
+    date,
     danaType,
     bagWeight,
     totalBags,
@@ -35,7 +36,7 @@ const editDanaEntry = () => {
   const [response, setResponse] = useState([]);
   const [list, setList] = useState({
     rate,
-    date: "",
+    date,
     danaType,
     bagWeight,
     totalBags,

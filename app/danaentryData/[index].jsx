@@ -160,6 +160,7 @@ const DanaEntryData = () => {
                       onLongPress={() => {
                         const params = {
                           rate,
+                          date,
                           danaType,
                           bagWeight,
                           totalBags,
