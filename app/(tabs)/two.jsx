@@ -85,7 +85,7 @@ export default function TabTwoScreen() {
   }, [navigation]);
 
   return (
-    <React.Fragment>
+    <View style={{ backgroundColor: appColors.white, height: '100%' }}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
@@ -144,7 +144,10 @@ export default function TabTwoScreen() {
                       <View style={styles.popUp}>
                         {/**Edit button */}
                         <TouchableOpacity
-                          onPress={() => handleEditDealerData(delete_edit_data)}
+                          onPress={() => {
+                            handleEditDealerData(delete_edit_data);
+                            setDisplayOptions(false)
+                          }}
                         >
                           <Text style={styles.popUpText}>
                             Edit <Icon name="edit" color={appColors.black} />
@@ -153,7 +156,10 @@ export default function TabTwoScreen() {
 
                         {/**Delete button */}
                         <TouchableOpacity
-                          onPress={() => handleDeleteDealer(delete_edit_data)}
+                          onPress={() => {
+                            handleDeleteDealer(delete_edit_data);
+                            setDisplayOptions(false)
+                          }}
                         >
                           <Text style={styles.popUpText}>
                             Delete <Icon name="trash" color={appColors.black} />
@@ -180,7 +186,7 @@ export default function TabTwoScreen() {
       <TouchableOpacity style={styles.addButton} onPress={handlePress}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-    </React.Fragment>
+    </View>
   );
 }
 

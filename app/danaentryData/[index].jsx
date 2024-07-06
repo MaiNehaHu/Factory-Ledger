@@ -207,6 +207,7 @@ const DanaEntryData = () => {
                                       params: edit_Delete_Data
                                     })
                                   }
+                                  setDisplayOptions(false)
                                 }}
                               >
                                 <Text style={styles.popUpText}>
@@ -215,7 +216,10 @@ const DanaEntryData = () => {
                               </TouchableOpacity>
 
                               <TouchableOpacity
-                                onPress={() => handleDeleteEntry(edit_Delete_Data.entryKey)}
+                                onPress={() => {
+                                  handleDeleteEntry(edit_Delete_Data.entryKey);
+                                  setDisplayOptions(false)
+                                }}
                               >
                                 <Text style={styles.popUpText}>
                                   Delete <Icon name="trash" color={appColors.blue} />

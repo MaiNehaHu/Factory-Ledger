@@ -13,7 +13,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 
 const DanaEntry = () => {
-  const date = todayDate();
   const navigation = useNavigation();
   const route = useLocalSearchParams();
   const { dealerName } = route;
@@ -21,6 +20,7 @@ const DanaEntry = () => {
   const [fetchedList, setFetchedList] = useState([]);
   const [data, setData] = useState({
     rate: 0,
+    date: "",
     danaType: "",
     bagWeight: 0,
     totalBags: 0,
@@ -28,7 +28,6 @@ const DanaEntry = () => {
     totalWeight: 0,
     paidPayment: 0,
     totalPayment: 0,
-    date: todayDate(),
   });
 
   const handleSubmit = async () => {
@@ -61,16 +60,6 @@ const DanaEntry = () => {
 
   function uniqueKey() {
     return `${Math.ceil(Math.random() * Math.pow(10, 5))}`;
-  }
-
-  function todayDate() {
-    const today = new Date();
-
-    const date = today.getDate();
-    const month = today.getMonth() + 1; // Adding 1 to get the correct month
-    const year = today.getFullYear();
-
-    return `${date}/${month}/${year}`;
   }
 
   useEffect(() => {
@@ -110,7 +99,12 @@ const DanaEntry = () => {
     <ScrollView style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.label}>Date:</Text>
-        <Text>{date}</Text>
+        <TextInput
+          style={styles.input}
+          value={data.date}
+          onChangeText={(text) => setData({ ...data, date: text })}
+          placeholder="Enter date"
+        />
       </View>
 
       <Text style={styles.label}>Dana Type</Text>

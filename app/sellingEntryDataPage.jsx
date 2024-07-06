@@ -1,89 +1,106 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Linking } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appColors } from "../constants/appColors";
-import React from "react";
 
-const sellingEntryDataPage = () => {
+const SellingEntryDataPage = () => {
   const route = useLocalSearchParams();
   const navigation = useNavigation();
+  const { key, dealerkey, dealerName, dealerContact } = route;
 
-  const {
-    key,
-    date,
-    rate,
-    bagWeight,
-    totalBags,
-    totalWeight,
-    duePayment,
-    paidPayment,
-    totalPayment,
-    dealerName,
-    dealerContact,
-  } = route;
+  const [data, setData] = useState({
+    date: "",
+    bagsData: [{ rate: 0, totalBags: 0, bagWeight: 0 }],
+    paidPayment: 0,
+    duePayment: 0,
+    totalPayment: 0,
+    backDue: 0,
+  });
 
-  function handleCall() {
-    Linking.openURL(`tel:+91 ${dealerContact}`);
-  }
+  const handleCall = () => {
+    Linking.openURL(`tel:+91${dealerContact}`);
+  };
 
-  React.useEffect(() => {
+  const callMe = async () => {
+    const result = await AsyncStorage.getItem("sold_maal_entry");
+    const parsedResult = JSON.parse(result);
+
+    // Find the entry with the matching key
+    const dealerData = parsedResult.find(dealer => dealer.key === dealerkey);
+    if (dealerData) {
+      const entryData = dealerData.soldEntry.find(entry => entry.key === key);
+      if (entryData) {
+        setData(entryData);
+        // console.log(data);
+      }
+    }
+  };
+
+  useEffect(() => {
+    callMe();
+  }, []);
+
+  useEffect(() => {
     if (dealerName) {
       navigation.setOptions({ title: `${dealerName} Dana Entry` });
     }
   }, [dealerName, navigation]);
 
   return (
-    <View style={styles.container}>
-      {/**Too print */}
+    <View>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Bill to: {dealerName}</Text>
+        <Text style={styles.headerText}>From: Rajeev Kumar</Text>
+      </View>
+
+      <View style={styles.date_ref}>
+        <TouchableOpacity onPress={handleCall}>
+          <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.alignRight}>Date: {data.date}</Text>
+        <Text style={styles.alignRight}>Ref No: {key}</Text>
+      </View>
+
+      <View style={styles.tableContainer}>
+        <View style={styles.rowHeader}>
+          <Text style={styles.headerCell}>Rate/Kg</Text>
+          <Text style={styles.headerCell}>Qty</Text>
+          <Text style={styles.headerCell}>Bag wt.</Text>
+          <Text style={styles.headerCell}>Total</Text>
+        </View>
+
+        {data.bagsData.map((bag, index) => (
+          <View style={styles.row} key={index}>
+            <Text style={styles.cell}>₹{bag.rate}</Text>
+            <Text style={styles.cell}>{bag.totalBags} Katta</Text>
+            <Text style={styles.cell}>{bag.bagWeight} Kg</Text>
+            <Text style={styles.cell}>₹{bag.rate * bag.bagWeight * bag.totalBags}</Text>
+          </View>
+        ))}
+
+        <View style={styles.rowHeader}>
+          <Text style={styles.headerCell}>To Pay</Text>
+          <Text style={styles.headerCell}>Back Due</Text>
+          <Text style={styles.headerCell}>Paid</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cell}>₹{data.totalPayment}</Text>
+          <Text style={styles.cell}>₹{data.backDue}</Text>
+          <Text style={styles.cell}>₹{data.paidPayment}</Text>
+        </View>
+      </View>
+
       <View>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Bill to: {dealerName}</Text>
-          <Text style={styles.headerText}>From: Rajeev Kumar</Text>
-        </View>
-
-        <View style={styles.date_ref}>
-          <TouchableOpacity onPress={handleCall}>
-            <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
-          </TouchableOpacity>
-          <Text style={styles.alignRight}>Date: {date}</Text>
-          <Text style={styles.alignRight}>Ref No: {key}</Text>
-        </View>
-
-        <View style={styles.tableContainer}>
-          {/* Table row_header */}
-          <View style={styles.row_header}>
-            <Text style={styles.header_cell}>Qty</Text>
-            <Text style={styles.header_cell}>Bag wt.</Text>
-            <Text style={styles.header_cell}>Total wt.</Text>
-          </View>
-          {/* Table body */}
-          <View style={styles.row}>
-            <Text style={styles.cell}>{totalBags} Katta</Text>
-            <Text style={styles.cell}>{bagWeight}Kg</Text>
-            <Text style={styles.cell}>{totalWeight}Kg</Text>
-          </View>
-          {/* Table row_header */}
-          <View style={styles.row_header}>
-            <Text style={styles.header_cell}>Rate/Kg</Text>
-            <Text style={styles.header_cell}>Paid</Text>
-            <Text style={styles.header_cell}>Balance</Text>
-          </View>
-          {/* Table Body */}
-          <View style={styles.row}>
-            <Text style={styles.cell}>₹{rate}</Text>
-            <Text style={styles.cell}>₹{paidPayment}</Text>
-            <Text style={styles.cell}>₹{duePayment}</Text>
-          </View>
-        </View>
-
-        <View>
-          <Text style={styles.text}> Total Payment: ₹{totalPayment}</Text>
-        </View>
+        <Text style={styles.text}>Updated Due Balance: ₹{data.duePayment}</Text>
       </View>
     </View>
   );
 };
 
-export default sellingEntryDataPage;
+export default SellingEntryDataPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -97,17 +114,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 10,
   },
-  row_header: {
+  rowHeader: {
     flexDirection: "row",
+    alignItems: 'center',
     justifyContent: "space-between",
     backgroundColor: appColors.lightYellow,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // backgroundColor: appColors.white,
   },
-  header_cell: {
+  headerCell: {
     flex: 1,
     fontWeight: "bold",
     textAlign: "center",

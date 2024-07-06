@@ -98,7 +98,7 @@ export default function TabOneScreen() {
   }, [clicked]);
 
   return (
-    <React.Fragment>
+    <View style={{ backgroundColor: appColors.white, height: '100%' }}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
@@ -157,7 +157,10 @@ export default function TabOneScreen() {
                       <View style={styles.popUp}>
                         {/**Edit button */}
                         <TouchableOpacity
-                          onPress={() => handleEditDealerData(delete_edit_data)}
+                          onPress={() => {
+                            handleEditDealerData(delete_edit_data);
+                            setDisplayOptions(false)
+                          }}
                         >
                           <Text style={styles.popUpText}>
                             Edit <Icon name="edit" color={appColors.blue} />
@@ -166,7 +169,10 @@ export default function TabOneScreen() {
 
                         {/**Delete button */}
                         <TouchableOpacity
-                          onPress={() => handleDeleteDealer(delete_edit_data)}
+                          onPress={() => {
+                            handleDeleteDealer(delete_edit_data);
+                            setDisplayOptions(false)
+                          }}
                         >
                           <Text style={styles.popUpText}>
                             Delete <Icon name="trash" color={appColors.blue} />
@@ -193,7 +199,7 @@ export default function TabOneScreen() {
       <TouchableOpacity style={styles.addButton} onPress={handlePress}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-    </React.Fragment>
+    </View>
   );
 }
 
@@ -213,12 +219,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: appColors.white,
+    backgroundColor: appColors.blue,
   },
   addButtonText: {
     fontSize: 30,
     fontWeight: "bold",
-    color: appColors.blue,
+    color: appColors.white,
   },
   searchBar: {
     height: 45,

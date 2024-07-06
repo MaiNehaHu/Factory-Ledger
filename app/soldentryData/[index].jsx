@@ -38,10 +38,7 @@ const SoldEntry = () => {
     } else {
       const updatedList = list.map((item) => {
         const sold = item.soldEntry.filter((data) => {
-          return (
-            data.date.toLowerCase().includes(inputText.toLowerCase()) ||
-            data.totalWeight.toString().includes(inputText.toString()) // Convert totalWeight to string for comparison
-          );
+          return data.date.toLowerCase().includes(inputText.toLowerCase());
         });
 
         return { ...item, soldEntry: sold };
@@ -116,123 +113,101 @@ const SoldEntry = () => {
             displayList &&
             displayList.map((allData) => {
               if (allData.key == dealerkey) {
-                return allData.soldEntry.map(
-                  ({
-                    date,
-                    key,
-                    rate,
-                    bagWeight,
-                    totalBags,
-                    totalWeight,
-                    duePayment,
-                    totalPayment,
-                    paidPayment,
-                  }) => (
-                    <Pressable
-                      key={key}
-                      style={styles.card}
-                      onPress={() => {
-                        if (!clicked) {
-                          setClicked(true);
+                return allData.soldEntry.map(({ date, key, duePayment }) => (
+                  <Pressable
+                    key={key}
+                    style={styles.card}
+                    onPress={() => {
+                      if (!clicked) {
+                        setClicked(true);
+                        router.push({
+                          pathname: "/sellingEntryDataPage",
+                          params: {
+                            key,
+                            date,
+                            dealerkey,
+                            dealerName,
+                            dealerContact,
+                          },
+                        });
+                      }
+                    }}
+                    onLongPress={() => {
+                      const params = {
+                        dealerkey,
+                        dealerName,
+                        entryKey: key,
+                      };
+                      setDisplayOptions(true);
+                      setEdit_Delete_Data(params);
+                    }}
+                  >
+                    <Text style={styles.textStyle}>
+                      {date} - ₹{duePayment} Due
+                    </Text>
 
-                          router.push({
-                            pathname: "/sellingEntryDataPage",
-                            params: {
-                              key,
-                              date,
-                              rate,
-                              bagWeight,
-                              totalBags,
-                              totalWeight,
-                              duePayment,
-                              paidPayment,
-                              totalPayment,
-                              dealerName,
-                              dealerContact,
-                            },
-                          });
-                        }
-                      }}
-                      onLongPress={() => {
-                        const params = {
-                          rate,
-                          bagWeight,
-                          totalBags,
-                          totalWeight,
-                          duePayment,
-                          paidPayment,
-                          totalPayment,
-                          dealerkey,
-                          dealerName,
-                          entryKey: key,
-                        }
-                        setDisplayOptions(true);
-                        setEdit_Delete_Data(params);
-                      }}
+                    {/**Modal */}
+                    <Modal
+                      animationType="fade"
+                      transparent={true}
+                      visible={displayOptions}
+                      onRequestClose={() => setDisplayOptions(false)}
                     >
-                      <Text style={styles.textStyle}>
-                        {date} - {totalWeight} KG
-                      </Text>
-
-                      {/**Modal */}
-                      <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={displayOptions}
-                        onRequestClose={() => setDisplayOptions(false)}
+                      <Pressable
+                        style={{
+                          flex: 1,
+                          justifyContent: "flex-end",
+                          alignItems: "stretch",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                        onPress={() => setDisplayOptions(false)}
                       >
-                        <Pressable
-                          style={{
-                            flex: 1,
-                            justifyContent: "flex-end",
-                            alignItems: "stretch",
-                            backgroundColor: "rgba(0, 0, 0, 0.5)",
-                          }}
-                          onPress={() => setDisplayOptions(false)}
-                        >
-                          <Pressable onPress={(e) => e.stopPropagation()}>
-                            <View style={styles.popUp}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (!clicked) {
-                                    setClicked(true);
+                        <Pressable onPress={(e) => e.stopPropagation()}>
+                          <View style={styles.popUp}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                if (!clicked) {
+                                  setClicked(true);
+                                  router.push({
+                                    pathname: "/editSellingEntry",
+                                    params: edit_Delete_Data,
+                                  });
+                                }
+                                setDisplayOptions(false);
+                              }}
+                            >
+                              <Text style={styles.popUpText}>
+                                Edit{" "}
+                                <Icon name="edit" color={appColors.black} />
+                              </Text>
+                            </TouchableOpacity>
 
-                                    router.push({
-                                      pathname: "/editSellingEntry",
-                                      params: edit_Delete_Data
-                                    })
-                                  }
-                                }}
-                              >
-                                <Text style={styles.popUpText}>
-                                  Edit <Icon name="edit" color={appColors.black} />
-                                </Text>
-                              </TouchableOpacity>
+                            {/**Delete button */}
+                            <TouchableOpacity
+                              onPress={() => {
+                                handleDeleteEntry(edit_Delete_Data.entryKey);
+                                setDisplayOptions(false);
+                              }}
+                            >
+                              <Text style={styles.popUpText}>
+                                Delete
+                                <Icon name="trash" color={appColors.black} />
+                              </Text>
+                            </TouchableOpacity>
 
-                              {/**Delete button */}
-                              <TouchableOpacity
-                                onPress={() => handleDeleteEntry(edit_Delete_Data.entryKey)}
-                              >
-                                <Text style={styles.popUpText}>
-                                  Delete
-                                  <Icon name="trash" color={appColors.black} />
-                                </Text>
-                              </TouchableOpacity>
-
-                              {/**Cancel button */}
-                              <TouchableOpacity
-                                onPress={() => setDisplayOptions(false)}
-                                style={styles.cancelButton}
-                              >
-                                <Text style={styles.cancelText}>Cancel</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </Pressable>
+                            {/**Cancel button */}
+                            <TouchableOpacity
+                              onPress={() => setDisplayOptions(false)}
+                              style={styles.cancelButton}
+                            >
+                              <Text style={styles.cancelText}>Cancel</Text>
+                            </TouchableOpacity>
+                          </View>
                         </Pressable>
-                      </Modal>
-                    </Pressable>
-                  )
-                );
+                      </Pressable>
+                    </Modal>
+                  </Pressable>
+                ));
               }
             })}
         </View>

@@ -35,6 +35,7 @@ const editDanaEntry = () => {
   const [response, setResponse] = useState([]);
   const [list, setList] = useState({
     rate,
+    date: "",
     danaType,
     bagWeight,
     totalBags,
@@ -42,7 +43,6 @@ const editDanaEntry = () => {
     paidPayment,
     duePayment,
     totalPayment,
-    date: todayDate(),
   });
 
   const handleSubmitEditted = async () => {
@@ -66,16 +66,6 @@ const editDanaEntry = () => {
       console.error("Error saving edited entry:", error);
     }
   };
-
-  function todayDate() {
-    const today = new Date();
-
-    const date = today.getDate();
-    const month = today.getMonth() + 1; // Adding 1 to get the correct month
-    const year = today.getFullYear();
-
-    return `${date}/${month}/${year}`;
-  }
 
   async function callMe() {
     const loadList = async () => {
@@ -110,6 +100,16 @@ const editDanaEntry = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.row}>
+        <Text style={styles.label}>Date</Text>
+        <TextInput
+        style={styles.input}
+        value={list.date}
+        onChangeText={(text) => setList({ ...list, date: text })}
+        placeholder="Enter date"
+      />
+      </View>
+
       <Text style={styles.label}>Dana Type</Text>
       <TextInput
         style={styles.input}
