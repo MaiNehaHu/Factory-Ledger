@@ -59,7 +59,7 @@ const SellingEntryDataPage = () => {
           <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.alignRight}>Date: {data.date}</Text>
+        <Text style={[styles.alignRight, { fontWeight: '600' }]}>Date: {data.date}</Text>
         <Text style={styles.alignRight}>Ref No: {key}</Text>
       </View>
 
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 17,
     padding: 10,
+    fontWeight:'600'
   },
   header: {
     display: "flex",

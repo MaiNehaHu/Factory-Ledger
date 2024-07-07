@@ -24,6 +24,7 @@ const DanaEntry = () => {
     danaType: "",
     bagWeight: 0,
     totalBags: 0,
+    backDue: 0,
     duePayment: 0,
     totalWeight: 0,
     paidPayment: 0,
@@ -93,8 +94,8 @@ const DanaEntry = () => {
   }, [data.rate, data.totalWeight]);
 
   useEffect(() => {
-    setData({ ...data, duePayment: data.totalPayment - data.paidPayment });
-  }, [data.totalPayment, data.paidPayment]);
+    setData({ ...data, duePayment: data.totalPayment - data.paidPayment + data.backDue });
+  }, [data.totalPayment, data.paidPayment, data.backDue]);
 
   React.useEffect(() => {
     if (dealerName) {
@@ -114,64 +115,84 @@ const DanaEntry = () => {
         />
       </View>
 
-      <Text style={styles.label}>Dana Type</Text>
-      <TextInput
-        style={styles.input}
-        value={data.danaType}
-        onChangeText={(text) => setData({ ...data, danaType: text })}
-        placeholder="Enter dana type"
-      />
-
-      <Text style={styles.label}>Rate</Text>
-      <TextInput
-        style={styles.input}
-        value={data.rate}
-        onChangeText={(text) => setData({ ...data, rate: text })}
-        keyboardType="numeric"
-        placeholder="Enter rate"
-      />
-
-      <Text style={styles.label}>Total Bags</Text>
-      <TextInput
-        style={styles.input}
-        value={data.totalBags}
-        onChangeText={(text) => setData({ ...data, totalBags: text })}
-        keyboardType="numeric"
-        placeholder="Enter total bags"
-      />
-
-      <Text style={styles.label}>One Bag Weight (Kg)</Text>
-      <TextInput
-        style={styles.input}
-        value={data.bagWeight}
-        onChangeText={(text) => setData({ ...data, bagWeight: text })}
-        keyboardType="numeric"
-        placeholder="Enter bag weight"
-      />
-
       <View style={styles.row}>
-        <Text style={styles.label}>Total Weight:</Text>
-        <Text>{data.totalWeight} KG</Text>
+        <Text style={styles.label}>Dana Type: </Text>
+        <TextInput
+          style={styles.input}
+          value={data.danaType}
+          onChangeText={(text) => setData({ ...data, danaType: text })}
+          placeholder="Enter dana type"
+        />
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Total Payment:</Text>
+        <Text style={styles.label}>Rate: </Text>
+        <TextInput
+          style={styles.input}
+          value={data.rate}
+          onChangeText={(text) => setData({ ...data, rate: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter rate"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Bags: </Text>
+        <TextInput
+          style={styles.input}
+          value={data.totalBags}
+          onChangeText={(text) => setData({ ...data, totalBags: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter total bags"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>One Bag Weight (Kg): </Text>
+        <TextInput
+          style={styles.input}
+          value={data.bagWeight}
+          onChangeText={(text) => setData({ ...data, bagWeight: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter bag weight"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Weight: </Text>
+        <Text>{data.totalWeight} KG</Text>
+      </View>
+
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Paid Payment: </Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          onChangeText={(text) => setData({ ...data, paidPayment: parseInt(text) || 0 })}
+          placeholder="₹ Enter paid"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Back Due: </Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          onChangeText={(text) => setData({ ...data, backDue: parseInt(text) || 0 })}
+          placeholder="Enter backDue"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Payment: </Text>
         <Text>₹ {data.totalPayment}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Due Payment:</Text>
-        <Text>₹ {data.duePayment}</Text>
+        <Text style={[styles.label, { fontSize: 17 }]}>Updated Due Payment:</Text>
+        <Text style={{ fontWeight: '600', fontSize: 17 }}>₹ {data.duePayment}</Text>
       </View>
-
-      <Text style={styles.label}>Paid Payment</Text>
-      <TextInput
-        style={styles.input}
-        value={data.paidPayment}
-        keyboardType="numeric"
-        onChangeText={(text) => setData({ ...data, paidPayment: text })}
-        placeholder="₹ Enter total payment"
-      />
 
       <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
         <Text style={styles.submitText}>Submit</Text>
@@ -184,17 +205,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 18,
+    backgroundColor: appColors.white,
   },
   label: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginVertical: 8,
   },
   input: {
+    width: '50%',
     fontSize: 15,
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
+    // marginBottom: 10,
     paddingVertical: 5,
     borderColor: "#ccc",
     paddingHorizontal: 10,
@@ -215,8 +238,9 @@ const styles = StyleSheet.create({
     gap: 10,
     display: "flex",
     flexDirection: "row",
-    marginVertical: 2,
+    marginVertical: 10,
     alignItems: "center",
+    justifyContent: 'space-between'
   },
 });
 

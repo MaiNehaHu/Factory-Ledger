@@ -29,6 +29,7 @@ const editDanaEntry = () => {
     bagWeight,
     totalBags,
     totalWeight,
+    backDue,
     duePayment,
     paidPayment,
     totalPayment,
@@ -42,6 +43,7 @@ const editDanaEntry = () => {
     bagWeight,
     totalBags,
     totalWeight,
+    backDue,
     paidPayment,
     duePayment,
     totalPayment,
@@ -49,7 +51,7 @@ const editDanaEntry = () => {
 
   const handleSubmitEditted = async () => {
     if (
-      data.date === "" || data.rate === 0 || data.danaType === ""
+      list.date === "" || list.rate === 0 || list.danaType === ""
     ) {
       Alert.alert("Please fill all data");
       return;
@@ -104,13 +106,13 @@ const editDanaEntry = () => {
   }, [list.rate, list.totalWeight]);
 
   useEffect(() => {
-    setList({ ...list, duePayment: list.totalPayment - list.paidPayment });
-  }, [list.totalPayment, list.paidPayment]);
+    setList({ ...list, duePayment: list.totalPayment - list.paidPayment + list.backDue });
+  }, [list.totalPayment, list.paidPayment, list.backDue]);
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.label}>Date</Text>
+        <Text style={styles.label}>Date: </Text>
         <TextInput
           style={styles.input}
           value={list.date}
@@ -119,44 +121,74 @@ const editDanaEntry = () => {
         />
       </View>
 
-      <Text style={styles.label}>Dana Type</Text>
-      <TextInput
-        style={styles.input}
-        value={list.danaType}
-        onChangeText={(text) => setList({ ...list, danaType: text })}
-        placeholder="Enter dana type"
-      />
+      <View style={styles.row}>
+        <Text style={styles.label}>Dana Type: </Text>
+        <TextInput
+          style={styles.input}
+          value={list.danaType}
+          onChangeText={(text) => setList({ ...list, danaType: text })}
+          placeholder="Enter dana type"
+        />
+      </View>
 
-      <Text style={styles.label}>Rate</Text>
-      <TextInput
-        style={styles.input}
-        value={list.rate}
-        onChangeText={(text) => setList({ ...list, rate: text })}
-        keyboardType="numeric"
-        placeholder="Enter rate"
-      />
+      <View style={styles.row}>
+        <Text style={styles.label}>Rate: </Text>
+        <TextInput
+          style={styles.input}
+          value={String(list.rate)}
+          onChangeText={(text) => setList({ ...list, rate: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter rate"
+        />
+      </View>
 
-      <Text style={styles.label}>Total Bags</Text>
-      <TextInput
-        style={styles.input}
-        value={list.totalBags}
-        onChangeText={(text) => setList({ ...list, totalBags: text })}
-        keyboardType="numeric"
-        placeholder="Enter total bags"
-      />
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Bags: </Text>
+        <TextInput
+          style={styles.input}
+          value={String(list.totalBags)}
+          onChangeText={(text) => setList({ ...list, totalBags: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter total bags"
+        />
+      </View>
 
-      <Text style={styles.label}>One Bag Weight (Kg)</Text>
-      <TextInput
-        style={styles.input}
-        value={list.bagWeight}
-        onChangeText={(text) => setList({ ...list, bagWeight: text })}
-        keyboardType="numeric"
-        placeholder="Enter bag weight"
-      />
+      <View style={styles.row}>
+        <Text style={styles.label}>1 Bag Weight (Kg): </Text>
+        <TextInput
+          style={styles.input}
+          value={String(list.bagWeight)}
+          onChangeText={(text) => setList({ ...list, bagWeight: parseInt(text) || 0 })}
+          keyboardType="numeric"
+          placeholder="Enter bag weight"
+        />
+      </View>
 
       <View style={styles.row}>
         <Text style={styles.label}>Total Weight:</Text>
         <Text>{list.totalWeight} KG</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Paid Payment:</Text>
+        <TextInput
+          style={styles.input}
+          value={String(list.paidPayment)}
+          keyboardType="numeric"
+          onChangeText={(text) => setList({ ...list, paidPayment: parseInt(text) || 0 })}
+          placeholder="₹ Enter paid"
+        />
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Back Due:</Text>
+        <TextInput
+          style={styles.input}
+          value={String(list.backDue)}
+          keyboardType="numeric"
+          onChangeText={(text) => setList({ ...list, backDue: parseFloat(text) || 0 })}
+          placeholder="₹ Enter Back Due"
+        />
       </View>
 
       <View style={styles.row}>
@@ -165,18 +197,9 @@ const editDanaEntry = () => {
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Due Payment:</Text>
-        <Text>₹ {list.duePayment}</Text>
+        <Text style={[styles.label, { fontSize: 17 }]}>Due Payment:</Text>
+        <Text style={{ fontWeight: '600', fontSize: 17 }}>₹ {list.duePayment}</Text>
       </View>
-
-      <Text style={styles.label}>Paid Payment</Text>
-      <TextInput
-        style={styles.input}
-        value={list.paidPayment}
-        keyboardType="numeric"
-        onChangeText={(text) => setList({ ...list, paidPayment: text })}
-        placeholder="₹ Enter total payment"
-      />
 
       <TouchableOpacity style={styles.submit} onPress={handleSubmitEditted}>
         <Text style={styles.submitText}>Submit</Text>
@@ -195,20 +218,21 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    fontWeight: "bold",
-    marginVertical: 8,
+    fontWeight: "600",
+    // marginVertical: 8,
   },
   input: {
+    width: '50%',
     fontSize: 15,
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
+    // marginBottom: 10,
     paddingVertical: 5,
     borderColor: "#ccc",
     paddingHorizontal: 10,
   },
   submit: {
-    marginTop: 50,
+    marginTop: 10,
     width: "100%",
     borderRadius: 10,
     backgroundColor: appColors.blue,
@@ -223,7 +247,8 @@ const styles = StyleSheet.create({
     gap: 10,
     display: "flex",
     flexDirection: "row",
-    marginVertical: 2,
+    marginVertical: 10,
     alignItems: "center",
+    justifyContent: 'space-between'
   },
 });

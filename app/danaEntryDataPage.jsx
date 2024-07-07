@@ -22,6 +22,7 @@ const danaEntryDataPage = () => {
     duePayment,
     bagWeight,
     totalWeight,
+    backDue,
     paidPayment,
     totalPayment,
     dealerName,
@@ -51,7 +52,7 @@ const danaEntryDataPage = () => {
           <TouchableOpacity onPress={handleCall}>
             <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
           </TouchableOpacity>
-          <Text style={styles.alignRight}>Date: {date}</Text>
+          <Text style={[styles.alignRight, { fontWeight: '600' }]}>Date: {date}</Text>
           <Text style={styles.alignRight}>Ref No: {key}</Text>
         </View>
 
@@ -75,15 +76,19 @@ const danaEntryDataPage = () => {
             <Text style={styles.header_cell}>Rate/Kg</Text>
             <Text style={styles.header_cell}>Total</Text>
             <Text style={styles.header_cell}>Paid</Text>
-            <Text style={styles.header_cell}>Balance</Text>
+            <Text style={styles.header_cell}>Back Due</Text>
           </View>
           {/* Table Body */}
           <View style={styles.row}>
             <Text style={styles.cell}>₹{rate}</Text>
             <Text style={styles.cell}>₹{totalPayment}</Text>
             <Text style={styles.cell}>₹{paidPayment}</Text>
-            <Text style={styles.cell}>₹{duePayment}</Text>
+            <Text style={styles.cell}>₹{backDue}</Text>
           </View>
+        </View>
+
+        <View>
+          <Text style={styles.text}>Updated Due Balance: ₹{duePayment}</Text>
         </View>
       </View>
     </View>
@@ -134,7 +139,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   text: {
-    fontSize: 15,
+    fontSize: 17,
+    padding: 10,
+    fontWeight: '600',
   },
   header: {
     display: "flex",

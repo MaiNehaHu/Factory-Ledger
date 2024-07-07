@@ -181,7 +181,7 @@ const editSellingEntry = () => {
           value={String(list.backDue)}
           keyboardType="numeric"
           onChangeText={(text) => setList({ ...list, backDue: parseFloat(text) || 0 })}
-          placeholder="₹ Enter total payment"
+          placeholder="₹ Enter Back due"
         />
       </View>
 
