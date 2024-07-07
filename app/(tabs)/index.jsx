@@ -155,29 +155,33 @@ export default function TabOneScreen() {
                   >
                     <Pressable onPress={(e) => e.stopPropagation()}>
                       <View style={styles.popUp}>
-                        {/**Edit button */}
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleEditDealerData(delete_edit_data);
-                            setDisplayOptions(false)
-                          }}
-                        >
-                          <Text style={styles.popUpText}>
-                            Edit <Icon name="edit" color={appColors.blue} />
-                          </Text>
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                          {/**Edit button */}
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleEditDealerData(delete_edit_data);
+                              setDisplayOptions(false)
+                            }}
+                            style={styles.editButton}
+                          >
+                            <Text style={styles.buttonText}>
+                              Edit <Icon name="edit" color={appColors.white} />
+                            </Text>
+                          </TouchableOpacity>
 
-                        {/**Delete button */}
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleDeleteDealer(delete_edit_data);
-                            setDisplayOptions(false)
-                          }}
-                        >
-                          <Text style={styles.popUpText}>
-                            Delete <Icon name="trash" color={appColors.blue} />
-                          </Text>
-                        </TouchableOpacity>
+                          {/**Delete button */}
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleDeleteDealer(delete_edit_data);
+                              setDisplayOptions(false)
+                            }}
+                            style={styles.deleteButton}
+                          >
+                            <Text style={styles.buttonText}>
+                              Delete <Icon name="trash" color={appColors.white} />
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
 
                         {/**Cancel button */}
                         <TouchableOpacity
@@ -268,22 +272,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: "column",
   },
-  popUpText: {
+  buttonText: {
     fontSize: 17,
-    fontWeight: "bold",
-    paddingHorizontal: 5,
-    color: appColors.blue,
+    fontWeight: '500',
+    color: appColors.white,
+  },
+  editButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.blue,
+  },
+  deleteButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.red
+  },
+  row: {
+    display: 'flex',
+    justifyContent:'space-between',
+    flexDirection: 'row-reverse',
   },
   cancelText: {
-    color: appColors.white,
     fontSize: 17,
     fontWeight: "bold",
+    paddingVertical: 15,
+    paddingHorizontal: 8,
+    color: appColors.blue,
   },
   cancelButton: {
-    fontSize: 17,
-    padding: 10,
     borderRadius: 10,
-    fontWeight: "bold",
-    backgroundColor: appColors.blue,
+    backgroundColor: appColors.lightBlue,
   },
 });

@@ -198,34 +198,38 @@ const DanaEntryData = () => {
                         >
                           <Pressable onPress={(e) => e.stopPropagation()}>
                             <View style={styles.popUp}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (!clicked) {
-                                    setClicked(true);
+                              <View style={styles.row}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (!clicked) {
+                                      setClicked(true);
 
-                                    router.push({
-                                      pathname: "/editDanaEntry",
-                                      params: edit_Delete_Data
-                                    })
-                                  }
-                                  setDisplayOptions(false)
-                                }}
-                              >
-                                <Text style={styles.popUpText}>
-                                  Edit <Icon name="edit" color={appColors.blue} />
-                                </Text>
-                              </TouchableOpacity>
+                                      router.push({
+                                        pathname: "/editDanaEntry",
+                                        params: edit_Delete_Data
+                                      })
+                                    }
+                                    setDisplayOptions(false)
+                                  }}
+                                  style={styles.editButton}
+                                >
+                                  <Text style={styles.buttonText}>
+                                    Edit <Icon name="edit" color={appColors.white} />
+                                  </Text>
+                                </TouchableOpacity>
 
-                              <TouchableOpacity
-                                onPress={() => {
-                                  handleDeleteEntry(edit_Delete_Data.entryKey);
-                                  setDisplayOptions(false)
-                                }}
-                              >
-                                <Text style={styles.popUpText}>
-                                  Delete <Icon name="trash" color={appColors.blue} />
-                                </Text>
-                              </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    handleDeleteEntry(edit_Delete_Data.entryKey);
+                                    setDisplayOptions(false)
+                                  }}
+                                  style={styles.deleteButton}
+                                >
+                                  <Text style={styles.buttonText}>
+                                    Delete <Icon name="trash" color={appColors.white} />
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
 
                               {/**Cancel button */}
                               <TouchableOpacity
@@ -308,6 +312,41 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     backgroundColor: appColors.blue,
   },
+  buttonText: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: appColors.white,
+  },
+  editButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.blue,
+  },
+  deleteButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.red
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row-reverse',
+  },
+  cancelText: {
+    fontSize: 17,
+    fontWeight: "bold",
+    paddingVertical: 15,
+    paddingHorizontal: 8,
+    color: appColors.blue,
+  },
+  cancelButton: {
+    borderRadius: 10,
+    backgroundColor: '#adc5ff',
+  },
   popUp: {
     gap: 20,
     display: "flex",
@@ -316,23 +355,5 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 20,
     flexDirection: "column",
-  },
-  popUpText: {
-    fontSize: 17,
-    fontWeight: "bold",
-    paddingHorizontal: 5,
-    color: appColors.blue,
-  },
-  cancelText: {
-    color: appColors.white,
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  cancelButton: {
-    fontSize: 17,
-    padding: 10,
-    borderRadius: 10,
-    fontWeight: "bold",
-    backgroundColor: appColors.blue,
   },
 });

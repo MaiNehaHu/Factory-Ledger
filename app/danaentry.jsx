@@ -31,6 +31,13 @@ const DanaEntry = () => {
   });
 
   const handleSubmit = async () => {
+    if (
+      data.date === "" || data.rate === 0 || data.danaType === ""
+    ) {
+      Alert.alert("Please fill all data");
+      return;
+    }
+
     try {
       // Create a new object with the entered data and the generated key
       const newDataEntry = { key: uniqueKey(), ...data };

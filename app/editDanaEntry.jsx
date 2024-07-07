@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -47,6 +48,13 @@ const editDanaEntry = () => {
   });
 
   const handleSubmitEditted = async () => {
+    if (
+      data.date === "" || data.rate === 0 || data.danaType === ""
+    ) {
+      Alert.alert("Please fill all data");
+      return;
+    }
+
     try {
       const updatedList = response.map((dealer) => {
         if (dealer.key === dealerkey) {
@@ -104,11 +112,11 @@ const editDanaEntry = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Date</Text>
         <TextInput
-        style={styles.input}
-        value={list.date}
-        onChangeText={(text) => setList({ ...list, date: text })}
-        placeholder="Enter date"
-      />
+          style={styles.input}
+          value={list.date}
+          onChangeText={(text) => setList({ ...list, date: text })}
+          placeholder="Enter date"
+        />
       </View>
 
       <Text style={styles.label}>Dana Type</Text>

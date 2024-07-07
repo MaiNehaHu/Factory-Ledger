@@ -19,7 +19,7 @@ const editSellingDealerData = () => {
   const [dealerName, setDealerName] = useState(name); // State to hold the dealer name
   const [dealerContact, setDealerContact] = useState(number); // State to hold the dealer Contact
 
-  console.log("in edit dealer page:", dealerkey);
+  console.log("In editSellingDealerData page:", dealerkey);
 
   const handleSubmit = async () => {
     if (dealerName == "" || !dealerContact) {

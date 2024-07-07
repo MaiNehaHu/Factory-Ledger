@@ -19,6 +19,8 @@ const editDanaDealerData = () => {
   const [dealerName, setDealerName] = useState(name); // State to hold the dealer name
   const [dealerContact, setDealerContact] = useState(number); // State to hold the dealer Contact
 
+  console.log("In editSellingDealerData page:", key);
+
   const handleSubmit = async () => {
     if (dealerName == "" || !dealerContact) {
       Alert.alert("Please Enter Valid Details");

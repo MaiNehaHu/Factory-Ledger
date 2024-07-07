@@ -120,7 +120,7 @@ export default function TabTwoScreen() {
                   };
                   setDisplayOptions(true);
                   setDelete_edit_data(params);
-                  console.log(delete_edit_data);
+                  // console.log(delete_edit_data);
                 }}
               >
                 <Text style={styles.textStyle}>{data.dealerName}</Text>
@@ -142,29 +142,33 @@ export default function TabTwoScreen() {
                   >
                     <Pressable onPress={(e) => e.stopPropagation()}>
                       <View style={styles.popUp}>
-                        {/**Edit button */}
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleEditDealerData(delete_edit_data);
-                            setDisplayOptions(false)
-                          }}
-                        >
-                          <Text style={styles.popUpText}>
-                            Edit <Icon name="edit" color={appColors.black} />
-                          </Text>
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                          {/**Edit button */}
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleEditDealerData(delete_edit_data);
+                              setDisplayOptions(false)
+                            }}
+                            style={styles.editButton}
+                          >
+                            <Text style={styles.buttonText}>
+                              Edit <Icon name="edit" color={appColors.black} />
+                            </Text>
+                          </TouchableOpacity>
 
-                        {/**Delete button */}
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleDeleteDealer(delete_edit_data);
-                            setDisplayOptions(false)
-                          }}
-                        >
-                          <Text style={styles.popUpText}>
-                            Delete <Icon name="trash" color={appColors.black} />
-                          </Text>
-                        </TouchableOpacity>
+                          {/**Delete button */}
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleDeleteDealer(delete_edit_data);
+                              setDisplayOptions(false)
+                            }}
+                            style={styles.deleteButton}
+                          >
+                            <Text style={styles.buttonText}>
+                              Delete <Icon name="trash" color={appColors.black} />
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
 
                         {/**Cancel button */}
                         <TouchableOpacity
@@ -250,22 +254,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: "column",
   },
-  popUpText: {
+  buttonText: {
     fontSize: 17,
-    fontWeight: "bold",
-    paddingHorizontal: 5,
+    fontWeight: '500',
     color: appColors.black,
+  },
+  editButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.yellow,
+  },
+  deleteButton: {
+    width: '48%',
+    fontSize: 17,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appColors.red
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row-reverse',
   },
   cancelText: {
-    color: appColors.black,
     fontSize: 17,
     fontWeight: "bold",
+    paddingVertical: 15,
+    paddingHorizontal: 8,
+    color: appColors.black,
   },
   cancelButton: {
-    fontSize: 17,
-    padding: 10,
     borderRadius: 10,
-    fontWeight: "bold",
-    backgroundColor: appColors.yellow,
+    backgroundColor: appColors.lightYellow,
   },
 });

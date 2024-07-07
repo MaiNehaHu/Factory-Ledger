@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { appColors } from "../constants/appColors";
@@ -32,6 +33,16 @@ const editSellingEntry = () => {
   });
 
   const handleSubmitEditted = async () => {
+    if (
+      list.date === "" ||
+      list.bagsData.some(
+        (bag) => bag.rate === 0 || bag.totalBags === 0 || bag.bagWeight === 0
+      )
+    ) {
+      Alert.alert("Please fill all data");
+      return;
+    }
+
     try {
       const updatedList = response.map((dealer) => {
         if (dealer.key === dealerkey) {
