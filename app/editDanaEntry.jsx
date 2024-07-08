@@ -1,5 +1,6 @@
 import {
   Alert,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -110,7 +111,7 @@ const editDanaEntry = () => {
   }, [list.totalPayment, list.paidPayment, list.backDue]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.label}>Date: </Text>
         <TextInput
@@ -204,7 +205,7 @@ const editDanaEntry = () => {
       <TouchableOpacity style={styles.submit} onPress={handleSubmitEditted}>
         <Text style={styles.submitText}>Submit</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
