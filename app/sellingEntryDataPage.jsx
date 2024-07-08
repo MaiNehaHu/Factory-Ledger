@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: appColors.white,
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
   },
   tableContainer: {
     backgroundColor: appColors.white,
