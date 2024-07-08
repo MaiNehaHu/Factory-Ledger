@@ -98,15 +98,15 @@ const editDanaEntry = () => {
   }, [dealerName, navigation]);
 
   useEffect(() => {
-    setList({ ...list, totalWeight: list.totalBags * list.bagWeight });
+    setList({ ...list, totalWeight: parseFloat(list.totalBags) * parseFloat(list.bagWeight) });
   }, [list.totalBags, list.bagWeight]);
 
   useEffect(() => {
-    setList({ ...list, totalPayment: list.rate * list.totalWeight });
+    setList({ ...list, totalPayment: parseFloat(list.rate) * parseFloat(list.totalWeight) });
   }, [list.rate, list.totalWeight]);
 
   useEffect(() => {
-    setList({ ...list, duePayment: list.totalPayment - list.paidPayment + list.backDue });
+    setList({ ...list, duePayment: parseFloat(list.totalPayment) - parseFloat(list.paidPayment) + parseFloat(list.backDue) });
   }, [list.totalPayment, list.paidPayment, list.backDue]);
 
   return (

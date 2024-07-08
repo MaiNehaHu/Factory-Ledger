@@ -94,7 +94,7 @@ const editSellingEntry = () => {
   }, [dealerName, navigation]);
 
   useEffect(() => {
-    setList({ ...list, duePayment: list.totalPayment - list.paidPayment + list.backDue });
+    setList({ ...list, duePayment: parseFloat(list.totalPayment) - parseFloat(list.paidPayment) + parseFloat(list.backDue) });
   }, [list.totalPayment, list.paidPayment, list.backDue]);
 
   useEffect(() => {
