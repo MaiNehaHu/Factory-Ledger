@@ -4,14 +4,20 @@ import {
   View,
   StyleSheet,
   Text,
+  Share as RNShare,
+  Image,
 } from "react-native";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { appColors } from "../constants/appColors";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+//share
+import ViewShot from "react-native-view-shot";
+import { shareAsync } from "expo-sharing";
 
 const danaEntryDataPage = () => {
   const route = useLocalSearchParams();
   const navigation = useNavigation();
+  const viewShotRef = useRef();
 
   const {
     key,
@@ -33,6 +39,20 @@ const danaEntryDataPage = () => {
     Linking.openURL(`tel:+91 ${dealerContact}`);
   }
 
+  const handleShare = async () => {
+    try {
+      const uri = await viewShotRef.current.capture();
+
+      await shareAsync(uri, {
+        mimeType: "image/jpeg",
+        dialogTitle: "Share this image",
+        UTI: "public.jpeg",
+      });
+    } catch (error) {
+      console.error("Error sharing screenshot:", error);
+    }
+  };
+
   React.useEffect(() => {
     if (dealerName) {
       navigation.setOptions({ title: `${dealerName} Dana Entry` });
@@ -42,13 +62,13 @@ const danaEntryDataPage = () => {
   return (
     <View style={styles.container}>
       {/**Too print */}
-      <View>
+      <ViewShot ref={viewShotRef} options={{ format: "jpg", quality: 1 }}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Bill to: {dealerName}</Text>
           <Text style={styles.headerText}>From: Rajeev Kumar</Text>
         </View>
 
-        <View style={styles.date_ref}>
+        <View style={[styles.date_ref, { backgroundColor: appColors.white, }]}>
           <TouchableOpacity onPress={handleCall}>
             <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
           </TouchableOpacity>
@@ -90,7 +110,11 @@ const danaEntryDataPage = () => {
         <View>
           <Text style={styles.text}>Updated Due Balance: ₹{duePayment}</Text>
         </View>
-      </View>
+      </ViewShot>
+
+      <TouchableOpacity style={styles.submit} onPress={handleShare}>
+        <Text style={styles.submitText}>Share</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -102,12 +126,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
+    backgroundColor: appColors.white,
   },
   tableContainer: {
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    margin: 10,
+    padding: 10,
+    backgroundColor: appColors.white,
   },
   row_header: {
     flexDirection: "row",
@@ -142,6 +165,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     padding: 10,
     fontWeight: '600',
+    paddingBottom: 20,
+    backgroundColor: appColors.white,
   },
   header: {
     display: "flex",
@@ -166,5 +191,16 @@ const styles = StyleSheet.create({
   },
   date_ref: {
     padding: 10,
+  },
+  submit: {
+    margin: 10,
+    borderRadius: 5,
+    backgroundColor: appColors.blue,
+  },
+  submitText: {
+    padding: 10,
+    fontSize: 20,
+    textAlign: "center",
+    color: appColors.white,
   },
 });

@@ -1,17 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Linking } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Linking,
+  StyleSheet,
+  Share as RNShare,
+  Image,
+} from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appColors } from "../constants/appColors";
+//share
+import ViewShot from "react-native-view-shot";
+import { shareAsync } from "expo-sharing";
 
 const SellingEntryDataPage = () => {
   const route = useLocalSearchParams();
   const navigation = useNavigation();
   const { key, dealerkey, dealerName, dealerContact } = route;
+  const viewShotRef = useRef();
 
   const [data, setData] = useState({
     date: "",
-    bagsData: [{ rate: 0, totalBags: 0, bagWeight: 0 }],
+    bagsData: [{ color: "", rate: 0, totalBags: 0, bagWeight: 0 }],
     paidPayment: 0,
     duePayment: 0,
     totalPayment: 0,
@@ -27,13 +39,27 @@ const SellingEntryDataPage = () => {
     const parsedResult = JSON.parse(result);
 
     // Find the entry with the matching key
-    const dealerData = parsedResult.find(dealer => dealer.key === dealerkey);
+    const dealerData = parsedResult.find((dealer) => dealer.key === dealerkey);
     if (dealerData) {
-      const entryData = dealerData.soldEntry.find(entry => entry.key === key);
+      const entryData = dealerData.soldEntry.find((entry) => entry.key === key);
       if (entryData) {
         setData(entryData);
         // console.log(data);
       }
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const uri = await viewShotRef.current.capture();
+
+      await shareAsync(uri, {
+        mimeType: "image/jpeg",
+        dialogTitle: "Share this image",
+        UTI: "public.jpeg",
+      });
+    } catch (error) {
+      console.error("Error sharing screenshot:", error);
     }
   };
 
@@ -48,54 +74,68 @@ const SellingEntryDataPage = () => {
   }, [dealerName, navigation]);
 
   return (
-    <View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Bill to: {dealerName}</Text>
-        <Text style={styles.headerText}>From: Rajeev Kumar</Text>
-      </View>
-
-      <View style={styles.date_ref}>
-        <TouchableOpacity onPress={handleCall}>
-          <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
-        </TouchableOpacity>
-
-        <Text style={[styles.alignRight, { fontWeight: '600' }]}>Date: {data.date}</Text>
-        <Text style={styles.alignRight}>Ref No: {key}</Text>
-      </View>
-
-      <View style={styles.tableContainer}>
-        <View style={styles.rowHeader}>
-          <Text style={styles.headerCell}>Rate/Kg</Text>
-          <Text style={styles.headerCell}>Qty</Text>
-          <Text style={styles.headerCell}>Bag wt.</Text>
-          <Text style={styles.headerCell}>Total</Text>
+    <View style={styles.container}>
+      <ViewShot ref={viewShotRef} options={{ format: "jpg", quality: 1 }}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Bill to: {dealerName}</Text>
+          <Text style={styles.headerText}>From: Rajeev Kumar</Text>
         </View>
 
-        {data.bagsData.map((bag, index) => (
-          <View style={styles.row} key={index}>
-            <Text style={styles.cell}>₹{bag.rate}</Text>
-            <Text style={styles.cell}>{bag.totalBags} Katta</Text>
-            <Text style={styles.cell}>{bag.bagWeight} Kg</Text>
-            <Text style={styles.cell}>₹{bag.rate * bag.bagWeight * bag.totalBags}</Text>
+        <View style={[styles.date_ref, { backgroundColor: appColors.white }]}>
+          <TouchableOpacity onPress={handleCall}>
+            <Text style={styles.alignLeft}>Contact: {dealerContact}</Text>
+          </TouchableOpacity>
+
+          <Text style={[styles.alignRight, { fontWeight: "600" }]}>
+            Date: {data.date}
+          </Text>
+          <Text style={styles.alignRight}>Ref No: {key}</Text>
+        </View>
+
+        <View style={styles.tableContainer}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.headerCell}>Color</Text>
+            <Text style={styles.headerCell}>Rate/Kg</Text>
+            <Text style={styles.headerCell}>Qty</Text>
+            <Text style={styles.headerCell}>Bag wt.</Text>
+            <Text style={styles.headerCell}>Total</Text>
           </View>
-        ))}
 
-        <View style={styles.rowHeader}>
-          <Text style={styles.headerCell}>To Pay</Text>
-          <Text style={styles.headerCell}>Back Due</Text>
-          <Text style={styles.headerCell}>Paid</Text>
+          {data.bagsData.map((bag, index) => (
+            <View style={styles.row} key={index}>
+              <Text style={styles.cell}>{bag.color}</Text>
+              <Text style={styles.cell}>₹{bag.rate}</Text>
+              <Text style={styles.cell}>{bag.totalBags} bag</Text>
+              <Text style={styles.cell}>{bag.bagWeight} Kg</Text>
+              <Text style={styles.cell}>
+                ₹{bag.rate * bag.bagWeight * bag.totalBags}
+              </Text>
+            </View>
+          ))}
+
+          <View style={styles.rowHeader}>
+            <Text style={styles.headerCell}>To Pay</Text>
+            <Text style={styles.headerCell}>Back Due</Text>
+            <Text style={styles.headerCell}>Paid</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cell}>₹{data.totalPayment}</Text>
+            <Text style={styles.cell}>₹{data.backDue}</Text>
+            <Text style={styles.cell}>₹{data.paidPayment}</Text>
+          </View>
         </View>
 
-        <View style={styles.row}>
-          <Text style={styles.cell}>₹{data.totalPayment}</Text>
-          <Text style={styles.cell}>₹{data.backDue}</Text>
-          <Text style={styles.cell}>₹{data.paidPayment}</Text>
+        <View>
+          <Text style={styles.text}>
+            Updated Due Balance: ₹{data.duePayment}
+          </Text>
         </View>
-      </View>
+      </ViewShot>
 
-      <View>
-        <Text style={styles.text}>Updated Due Balance: ₹{data.duePayment}</Text>
-      </View>
+      <TouchableOpacity style={styles.submit} onPress={handleShare}>
+        <Text style={styles.submitText}>Share</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -106,17 +146,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
+    backgroundColor: appColors.white,
+    // justifyContent: "space-between",
   },
   tableContainer: {
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 5,
-    margin: 10,
+    backgroundColor: appColors.white,
   },
   rowHeader: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: appColors.lightYellow,
   },
@@ -146,7 +184,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 17,
     padding: 10,
-    fontWeight:'600'
+    fontWeight: "600",
+    paddingBottom: 20,
+    backgroundColor: appColors.white,
   },
   header: {
     display: "flex",

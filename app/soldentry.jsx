@@ -20,7 +20,7 @@ const SoldEntry = () => {
   const [fetchedList, setFetchedList] = useState([]);
   const [data, setData] = useState({
     date: "",
-    bagsData: [{ rate: 0, totalBags: 0, bagWeight: 0 }],
+    bagsData: [{ color: "", rate: 0, totalBags: 0, bagWeight: 0 }],
     paidPayment: 0,
     duePayment: 0,
     totalPayment: 0,
@@ -142,47 +142,93 @@ const SoldEntry = () => {
       </View>
 
       {data.bagsData.map((bag, index) => (
-        <View key={index} style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Rate per KG</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => {
-                const newBagsData = [...data.bagsData];
-                newBagsData[index].rate = text;
-                setData((prevData) => ({ ...prevData, bagsData: newBagsData }));
-              }}
-              keyboardType="numeric"
-              placeholder="Enter rate"
-            />
+        <View
+          key={index}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            borderBottomWidth: 2,
+            borderStyle:'dashed',
+            borderColor: appColors.black,
+            paddingBottom: 10,
+          }}
+        >
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>Color</Text>
+              <TextInput
+                style={[styles.input, { marginBottom: 0 }]}
+                onChangeText={(text) => {
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].color = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
+                }}
+                keyboardType="default"
+                placeholder="Color"
+              />
+            </View>
+
+            <View style={styles.col}>
+              <Text style={styles.label}>
+                Rate/KG
+              </Text>
+              <TextInput
+                style={[styles.input, { marginBottom: 0 }]}
+                onChangeText={(text) => {
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].rate = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
+                }}
+                keyboardType="numeric"
+                placeholder="Enter rate"
+              />
+            </View>
           </View>
 
-          <View style={styles.col}>
-            <Text style={styles.label}>Total Bags</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => {
-                const newBagsData = [...data.bagsData];
-                newBagsData[index].totalBags = text;
-                setData((prevData) => ({ ...prevData, bagsData: newBagsData }));
-              }}
-              keyboardType="numeric"
-              placeholder="Enter total bags"
-            />
-          </View>
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>
+                Total Bags
+              </Text>
+              <TextInput
+                style={[styles.input, { marginBottom: 0 }]}
+                onChangeText={(text) => {
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].totalBags = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
+                }}
+                keyboardType="numeric"
+                placeholder="Enter total bags"
+              />
+            </View>
 
-          <View style={styles.col}>
-            <Text style={styles.label}>1 Bag Weight</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => {
-                const newBagsData = [...data.bagsData];
-                newBagsData[index].bagWeight = text;
-                setData((prevData) => ({ ...prevData, bagsData: newBagsData }));
-              }}
-              keyboardType="numeric"
-              placeholder="Enter bag weight"
-            />
+            <View style={styles.col}>
+              <Text style={styles.label}>
+                1 Bag Wgt.
+              </Text>
+              <TextInput
+                style={[styles.input, { marginBottom: 0 }]}
+                onChangeText={(text) => {
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].bagWeight = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
+                }}
+                keyboardType="numeric"
+                placeholder="Enter bag weight"
+              />
+            </View>
           </View>
         </View>
       ))}
@@ -243,6 +289,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 18,
+    backgroundColor:appColors.white
   },
   label: {
     fontSize: 15,
@@ -260,6 +307,8 @@ const styles = StyleSheet.create({
   },
   submit: {
     width: "100%",
+    marginTop: 10,
+    marginBottom: 40,
     borderRadius: 10,
     backgroundColor: appColors.yellow,
   },
@@ -280,10 +329,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 5,
-    width: "30%",
+    width: "48%",
   },
   buttonRow: {
-    gap: 5,
+    gap: 10,
     top: 0,
     right: 0,
     position: "absolute",

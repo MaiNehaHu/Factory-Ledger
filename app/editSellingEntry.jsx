@@ -25,7 +25,7 @@ const editSellingEntry = () => {
   const [response, setResponse] = useState([]);
   const [list, setList] = useState({
     date: "",
-    bagsData: [{ rate: 0, totalBags: 0, bagWeight: 0 }],
+    bagsData: [{ color: "", rate: 0, totalBags: 0, bagWeight: 0 }],
     paidPayment: 0,
     duePayment: 0,
     totalPayment: 0,
@@ -104,7 +104,7 @@ const editSellingEntry = () => {
 
   const handleBagsDataChange = (index, field, value) => {
     const newBagsData = list.bagsData.map((bag, i) =>
-      i === index ? { ...bag, [field]: parseFloat(value) || 0 } : bag
+      i === index ? { ...bag, [field]: value } : bag
     );
     setList({ ...list, bagsData: newBagsData });
   };
@@ -132,32 +132,53 @@ const editSellingEntry = () => {
 
       {list.bagsData.map((bag, index) => (
         <View key={index} style={styles.bagContainer}>
-          <Text style={styles.label}>Rate</Text>
-          <TextInput
-            style={styles.input}
-            value={String(bag.rate)}
-            onChangeText={(text) => handleBagsDataChange(index, 'rate', text)}
-            keyboardType="numeric"
-            placeholder="Enter rate"
-          />
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>Color</Text>
+              <TextInput
+                style={styles.input}
+                value={String(bag.color)}
+                onChangeText={(text) => handleBagsDataChange(index, 'color', text || "")}
+                keyboardType='default'
+                placeholder="Enter color"
+              />
+            </View>
 
-          <Text style={styles.label}>Total Bags</Text>
-          <TextInput
-            style={styles.input}
-            value={String(bag.totalBags)}
-            onChangeText={(text) => handleBagsDataChange(index, 'totalBags', text)}
-            keyboardType="numeric"
-            placeholder="Enter total bags"
-          />
+            <View style={styles.col}>
+              <Text style={styles.label}>Rate/Kg</Text>
+              <TextInput
+                style={styles.input}
+                value={String(bag.rate)}
+                onChangeText={(text) => handleBagsDataChange(index, 'rate', parseFloat(text) || 0)}
+                keyboardType="numeric"
+                placeholder="Enter rate"
+              />
+            </View>
+          </View>
 
-          <Text style={styles.label}>One Bag Weight (Kg)</Text>
-          <TextInput
-            style={styles.input}
-            value={String(bag.bagWeight)}
-            onChangeText={(text) => handleBagsDataChange(index, 'bagWeight', text)}
-            keyboardType="numeric"
-            placeholder="Enter bag weight"
-          />
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>Total Bags</Text>
+              <TextInput
+                style={styles.input}
+                value={String(bag.totalBags)}
+                onChangeText={(text) => handleBagsDataChange(index, 'totalBags', parseFloat(text) || 0)}
+                keyboardType="numeric"
+                placeholder="Enter total bags"
+              />
+            </View>
+
+            <View style={styles.col}>
+              <Text style={styles.label}>1 Bag Wt. (Kg)</Text>
+              <TextInput
+                style={styles.input}
+                value={String(bag.bagWeight)}
+                onChangeText={(text) => handleBagsDataChange(index, 'bagWeight', parseFloat(text) || 0)}
+                keyboardType="numeric"
+                placeholder="Enter bag weight"
+              />
+            </View>
+          </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>Total Weight:</Text>
@@ -246,7 +267,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   submit: {
-    marginTop: 30,
+    marginTop: 20,
+    marginBottom: 40,
     width: "100%",
     borderRadius: 10,
     backgroundColor: appColors.yellow,
@@ -263,6 +285,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 2,
     alignItems: "center",
+  },
+  col: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+    width: "48%",
   },
   bagContainer: {
     marginBottom: 20,
