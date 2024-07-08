@@ -1,5 +1,3 @@
-# Link to download : [Link](https://expo.dev/artifacts/eas/m93eLnbVGMoGLcgUxLq7fU.apk)
-
 # Steps to get started with a new React Native App with Expo CLI
 
 1. Just use command
