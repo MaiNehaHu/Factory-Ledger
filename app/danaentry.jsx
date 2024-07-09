@@ -211,7 +211,7 @@ const danaEntry = () => {
         <Text>₹ {data.duePayment}</Text>
       </View>
 
-      <View style={styles.row}>
+      <View style={{ display: 'flex', flexDirection: 'col', width: '100%' }}>
         <Text style={styles.label}>Paid Payment:</Text>
         <TextInput
           style={styles.input}
@@ -222,7 +222,7 @@ const danaEntry = () => {
         />
       </View>
 
-      <View style={styles.row}>
+      <View style={{ display: 'flex', flexDirection: 'col', width: '100%' }}>
         <Text style={styles.label}>Back Due:</Text>
         <TextInput
           style={styles.input}
