@@ -38,7 +38,8 @@ const SoldEntry = () => {
     } else {
       const updatedList = list.map((item) => {
         const sold = item.soldEntry.filter((data) => {
-          return data.date.toLowerCase().includes(inputText.toLowerCase());
+          return data.date.toLowerCase().includes(inputText.toLowerCase()) ||
+            data.duePayment.toString().includes(inputText.toString());
         });
 
         return { ...item, soldEntry: sold };
@@ -309,7 +310,7 @@ const styles = StyleSheet.create({
   },
   row: {
     display: 'flex',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     flexDirection: 'row-reverse',
   },
   cancelText: {

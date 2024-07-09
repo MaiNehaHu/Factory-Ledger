@@ -20,39 +20,24 @@ async function getTheList() {
 const editDanaEntry = () => {
   const route = useLocalSearchParams();
   const navigation = useNavigation();
-  const {
-    entryKey,
-    dealerkey,
-    dealerName,
-    rate,
-    date,
-    danaType,
-    bagWeight,
-    totalBags,
-    totalWeight,
-    backDue,
-    duePayment,
-    paidPayment,
-    totalPayment,
-  } = route;
+  const { entryKey, dealerkey, dealerName } = route;
 
   const [response, setResponse] = useState([]);
   const [list, setList] = useState({
-    rate,
-    date,
-    danaType,
-    bagWeight,
-    totalBags,
-    totalWeight,
-    backDue,
-    paidPayment,
-    duePayment,
-    totalPayment,
+    date: "",
+    danaEntries: [{ danaType: "", rate: 0, totalBags: 0, bagWeight: 0 }],
+    paidPayment: 0,
+    duePayment: 0,
+    totalPayment: 0,
+    backDue: 0,
   });
 
   const handleSubmitEditted = async () => {
     if (
-      list.date === "" || list.rate === 0 || list.danaType === ""
+      list.date === "" ||
+      list.danaEntries.some(
+        (bag) => bag.rate === 0 || bag.totalBags === 0 || bag.bagWeight === 0
+      )
     ) {
       Alert.alert("Please fill all data");
       return;
@@ -83,37 +68,74 @@ const editDanaEntry = () => {
     const loadList = async () => {
       const res = await getTheList();
       setResponse(res);
+      const dealerData = res.find((dealer) => dealer.key === dealerkey);
+      if (dealerData) {
+        const entryData = dealerData.danaEntry.find(
+          (entry) => entry.key === entryKey
+        );
+        if (entryData) {
+          setList(entryData);
+        }
+      }
     };
 
     loadList();
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     callMe();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (dealerName) {
-      navigation.setOptions({ title: `Edit ${dealerName} Entry` });
+      navigation.setOptions({ title: `Edit ${dealerName} Dana Entry` });
     }
   }, [dealerName, navigation]);
 
   useEffect(() => {
-    setList({ ...list, totalWeight: parseFloat(list.totalBags) * parseFloat(list.bagWeight) });
-  }, [list.totalBags, list.bagWeight]);
+    const totalPayment = list.danaEntries.reduce(
+      (acc, entry) => acc + entry.rate * entry.totalBags * entry.bagWeight,
+      0
+    );
+    setList({ ...list, totalPayment });
+  }, [list.danaEntries]);
 
   useEffect(() => {
-    setList({ ...list, totalPayment: parseFloat(list.rate) * parseFloat(list.totalWeight) });
-  }, [list.rate, list.totalWeight]);
-
-  useEffect(() => {
-    setList({ ...list, duePayment: parseFloat(list.totalPayment) - parseFloat(list.paidPayment) + parseFloat(list.backDue) });
+    setList({
+      ...list,
+      duePayment:
+        parseFloat(list.totalPayment) -
+        parseFloat(list.paidPayment) +
+        parseFloat(list.backDue),
+    });
   }, [list.totalPayment, list.paidPayment, list.backDue]);
+
+  const handleDanaEntriesChange = (index, field, value) => {
+    const newDanaEntries = list.danaEntries.map((entry, i) =>
+      i === index ? { ...entry, [field]: value } : entry
+    );
+    setList({ ...list, danaEntries: newDanaEntries });
+  };
+
+  const addDanaEntry = () => {
+    setList({
+      ...list,
+      danaEntries: [
+        ...list.danaEntries,
+        { danaType: "", rate: 0, totalBags: 0, bagWeight: 0 },
+      ],
+    });
+  };
+
+  const removeDanaEntry = (index) => {
+    const newDanaEntries = list.danaEntries.filter((_, i) => i !== index);
+    setList({ ...list, danaEntries: newDanaEntries });
+  };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.label}>Date: </Text>
+        <Text style={styles.label}>Date</Text>
         <TextInput
           style={styles.input}
           value={list.date}
@@ -122,52 +144,100 @@ const editDanaEntry = () => {
         />
       </View>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Dana Type: </Text>
-        <TextInput
-          style={styles.input}
-          value={list.danaType}
-          onChangeText={(text) => setList({ ...list, danaType: text })}
-          placeholder="Enter dana type"
-        />
-      </View>
+      {list.danaEntries.map((entry, index) => (
+        <View key={index} style={styles.entryContainer}>
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>Dana Type</Text>
+              <TextInput
+                style={styles.input}
+                value={entry.danaType}
+                onChangeText={(text) =>
+                  handleDanaEntriesChange(index, "danaType", text)
+                }
+                placeholder="Enter dana type"
+              />
+            </View>
+
+            <View style={styles.col}>
+              <Text style={styles.label}>Rate</Text>
+              <TextInput
+                style={styles.input}
+                value={String(entry.rate)}
+                onChangeText={(text) =>
+                  handleDanaEntriesChange(index, "rate", parseFloat(text) || 0)
+                }
+                keyboardType="numeric"
+                placeholder="Enter rate"
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.col}>
+              <Text style={styles.label}>Total Bags</Text>
+              <TextInput
+                style={styles.input}
+                value={String(entry.totalBags)}
+                onChangeText={(text) =>
+                  handleDanaEntriesChange(
+                    index,
+                    "totalBags",
+                    parseFloat(text) || 0
+                  )
+                }
+                keyboardType="numeric"
+                placeholder="Enter total bags"
+              />
+            </View>
+
+            <View style={styles.col}>
+              <Text style={styles.label}>1 Bag Weight (Kg)</Text>
+              <TextInput
+                style={styles.input}
+                value={String(entry.bagWeight)}
+                onChangeText={(text) =>
+                  handleDanaEntriesChange(
+                    index,
+                    "bagWeight",
+                    parseFloat(text) || 0
+                  )
+                }
+                keyboardType="numeric"
+                placeholder="Enter bag weight"
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>Total Weight:</Text>
+            <Text>{entry.totalBags * entry.bagWeight} KG</Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.removeButton}
+            onPress={() => removeDanaEntry(index)}
+          >
+            <Text style={styles.removeButtonText}>Remove Dana Entry</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+
+      <TouchableOpacity style={styles.addButton} onPress={addDanaEntry}>
+        <Text style={styles.addButtonText}>Add Dana Entry</Text>
+      </TouchableOpacity>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Rate: </Text>
+        <Text style={styles.label}>Back Due:</Text>
         <TextInput
           style={styles.input}
-          value={String(list.rate)}
-          onChangeText={(text) => setList({ ...list, rate: parseInt(text) || 0 })}
+          value={String(list.backDue)}
           keyboardType="numeric"
-          placeholder="Enter rate"
+          onChangeText={(text) =>
+            setList({ ...list, backDue: parseFloat(text) || 0 })
+          }
+          placeholder="₹ Enter back due"
         />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={styles.label}>Total Bags: </Text>
-        <TextInput
-          style={styles.input}
-          value={String(list.totalBags)}
-          onChangeText={(text) => setList({ ...list, totalBags: parseInt(text) || 0 })}
-          keyboardType="numeric"
-          placeholder="Enter total bags"
-        />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={styles.label}>1 Bag Weight (Kg): </Text>
-        <TextInput
-          style={styles.input}
-          value={String(list.bagWeight)}
-          onChangeText={(text) => setList({ ...list, bagWeight: parseInt(text) || 0 })}
-          keyboardType="numeric"
-          placeholder="Enter bag weight"
-        />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={styles.label}>Total Weight:</Text>
-        <Text>{list.totalWeight} KG</Text>
       </View>
 
       <View style={styles.row}>
@@ -176,19 +246,10 @@ const editDanaEntry = () => {
           style={styles.input}
           value={String(list.paidPayment)}
           keyboardType="numeric"
-          onChangeText={(text) => setList({ ...list, paidPayment: parseInt(text) || 0 })}
-          placeholder="₹ Enter paid"
-        />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={styles.label}>Back Due:</Text>
-        <TextInput
-          style={styles.input}
-          value={String(list.backDue)}
-          keyboardType="numeric"
-          onChangeText={(text) => setList({ ...list, backDue: parseFloat(text) || 0 })}
-          placeholder="₹ Enter Back Due"
+          onChangeText={(text) =>
+            setList({ ...list, paidPayment: parseFloat(text) || 0 })
+          }
+          placeholder="₹ Enter paid payment"
         />
       </View>
 
@@ -198,8 +259,8 @@ const editDanaEntry = () => {
       </View>
 
       <View style={styles.row}>
-        <Text style={[styles.label, { fontSize: 17 }]}>Due Payment:</Text>
-        <Text style={{ fontWeight: '600', fontSize: 17 }}>₹ {list.duePayment}</Text>
+        <Text style={styles.label}>Due Payment:</Text>
+        <Text>₹ {list.duePayment}</Text>
       </View>
 
       <TouchableOpacity style={styles.submit} onPress={handleSubmitEditted}>
@@ -219,21 +280,21 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    fontWeight: "600",
-    // marginVertical: 8,
+    fontWeight: "bold",
+    marginVertical: 4,
   },
   input: {
-    width: '50%',
     fontSize: 15,
     borderWidth: 1,
     borderRadius: 5,
-    // marginBottom: 10,
+    marginBottom: 10,
     paddingVertical: 5,
     borderColor: "#ccc",
     paddingHorizontal: 10,
   },
   submit: {
-    marginTop: 10,
+    marginTop: 20,
+    marginBottom: 40,
     width: "100%",
     borderRadius: 10,
     backgroundColor: appColors.blue,
@@ -245,11 +306,42 @@ const styles = StyleSheet.create({
     color: appColors.white,
   },
   row: {
-    gap: 10,
+    marginBottom: 10,
     display: "flex",
     flexDirection: "row",
+    alignItems:'center',
+    gap:5,
+  },
+  col: {
+    flex: 1,
+    display:'flex',
+    flexDirection:'column',
+    marginHorizontal: 5,
+  },
+  entryContainer: {
+    marginBottom: 20,
+  },
+  addButton: {
+    backgroundColor: appColors.blue,
+    padding: 10,
+    borderRadius: 5,
     marginVertical: 10,
-    alignItems: "center",
-    justifyContent: 'space-between'
+  },
+  addButtonText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: appColors.white,
+  },
+  removeButton: {
+    backgroundColor: appColors.red,
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: appColors.white,
+    textAlign: "center",
+    fontSize: 15,
   },
 });

@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   Linking,
   StyleSheet,
-  Share as RNShare,
-  Image,
 } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";

@@ -37,9 +37,8 @@ const DanaEntryData = () => {
       const updatedList = list.map((item) => {
         const dana = item.danaEntry.filter((data) => {
           return (
-            data.danaType.toLowerCase().includes(inputText.toLowerCase()) ||
             data.date.toLowerCase().includes(inputText.toLowerCase()) ||
-            data.totalWeight.toString().includes(inputText.toString()) // Convert totalWeight to string for comparison
+            data.duePayment.toString().includes(inputText.toString()) // Convert totalWeight to string for comparison
           );
         });
 
@@ -122,15 +121,7 @@ const DanaEntryData = () => {
                   ({
                     date,
                     key,
-                    danaType,
-                    rate,
-                    bagWeight,
-                    totalBags,
-                    totalWeight,
-                    backDue,
-                    duePayment,
-                    totalPayment,
-                    paidPayment,
+                    duePayment
                   }) => (
                     <Pressable
                       key={key}
@@ -143,36 +134,17 @@ const DanaEntryData = () => {
                             pathname: "/danaEntryDataPage",
                             params: {
                               key,
-                              date,
-                              danaType,
-                              rate,
-                              bagWeight,
-                              totalBags,
-                              totalWeight,
-                              duePayment,
-                              backDue,
-                              paidPayment,
-                              totalPayment,
+                              dealerkey,
                               dealerName,
-                              dealerContact,
+                              dealerContact
                             },
                           });
                         }
                       }}
                       onLongPress={() => {
                         const params = {
-                          rate,
-                          date,
-                          danaType,
-                          bagWeight,
-                          totalBags,
-                          totalWeight,
-                          backDue,
-                          duePayment,
-                          paidPayment,
-                          totalPayment,
-                          dealerkey,
                           dealerName,
+                          dealerkey,
                           entryKey: key,
                         }
                         setDisplayOptions(true);
@@ -180,7 +152,7 @@ const DanaEntryData = () => {
                       }}
                     >
                       <Text style={styles.textStyle}>
-                        {danaType}: {date} - {totalWeight}KG
+                        {date} - ₹{duePayment} Due
                       </Text>
 
                       {/**Modal */}
@@ -258,7 +230,7 @@ const DanaEntryData = () => {
         onPress={() => {
           router.push({
             pathname: "/danaentry",
-            params: { dealerName },
+            params: { dealerName, dealerkey },
           });
         }}
       >
