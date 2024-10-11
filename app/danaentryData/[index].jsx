@@ -223,7 +223,7 @@ const DanaEntryData = () => {
               }
             })}
         </View>
-      </ScrollView >
+      </ScrollView>
 
       <TouchableOpacity
         style={styles.addButton}
@@ -236,7 +236,7 @@ const DanaEntryData = () => {
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-    </View >
+    </View>
   );
 };
 
