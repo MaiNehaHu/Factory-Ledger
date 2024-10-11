@@ -86,7 +86,7 @@ const DanaEntryData = () => {
   }
   React.useEffect(() => {
     if (dealerName) {
-      navigation.setOptions({ title: dealerName });
+      navigation.setOptions({ title: `${dealerName}'s List` });
     }
   }, [dealerName, navigation]);
 
@@ -229,7 +229,7 @@ const DanaEntryData = () => {
         style={styles.addButton}
         onPress={() => {
           router.push({
-            pathname: "/danaentry",
+            pathname: "/addDanaDetails",
             params: { dealerName, dealerkey },
           });
         }}

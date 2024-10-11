@@ -8,18 +8,18 @@ import {
 } from "react-native";
 import { appColors } from "@/constants/appColors";
 import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const NewDanaDealer = () => {
+const AddSellingDealer = () => {
   const [dealerName, setDealerName] = useState(""); // State to hold the dealer name
-  const [dealerContact, setDealerContact] = useState(); // State to hold the dealer Contact
   const [dealerList, setDealerList] = useState([]);
+  const [dealerContact, setDealerContact] = useState(); // State to hold the dealer Contact
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
     if (dealerName == "" || !dealerContact) {
-      Alert.alert("Please Enter Valid Details");
+      Alert.alert("Enter Valid Details");
       return;
     }
 
@@ -27,18 +27,17 @@ const NewDanaDealer = () => {
       key: uniqueKey(),
       dealerName: dealerName,
       dealerContact: dealerContact,
-      danaEntry: [],
+      soldEntry: [],
     };
 
     try {
       const updatedList = [newUser, ...dealerList];
       console.log(updatedList);
 
-      await AsyncStorage.setItem("dana_entry", JSON.stringify(updatedList));
+      await AsyncStorage.setItem("sold_maal_entry", JSON.stringify(updatedList));
 
       setDealerList(updatedList);
       setDealerName("");
-      setDealerContact()
       Alert.alert(dealerName, " added successfully");
 
       // finally
@@ -58,7 +57,7 @@ const NewDanaDealer = () => {
     // Load the list of dealers from AsyncStorage when the component mounts
     const loadDealerList = async () => {
       try {
-        const list = await AsyncStorage.getItem("dana_entry");
+        const list = await AsyncStorage.getItem("sold_maal_entry");
         if (list !== null) {
           setDealerList(JSON.parse(list));
         }
@@ -76,7 +75,7 @@ const NewDanaDealer = () => {
       <TextInput
         style={styles.input}
         value={dealerName}
-        onChangeText={setDealerName}
+        onChangeText={(text) => setDealerName(text)}
         placeholder="Example: Rajeev Bhai"
       />
       <TextInput
@@ -95,7 +94,7 @@ const NewDanaDealer = () => {
   );
 };
 
-export default NewDanaDealer;
+export default AddSellingDealer;
 
 const styles = StyleSheet.create({
   container: {
@@ -117,13 +116,13 @@ const styles = StyleSheet.create({
   submit: {
     width: "50%",
     borderRadius: 10,
-    backgroundColor: appColors.blue,
+    backgroundColor: appColors.yellow,
     alignSelf: "flex-end",
   },
   submitText: {
     padding: 10,
     fontSize: 15,
     textAlign: "center",
-    color: appColors.white,
+    color: appColors.black,
   },
 });

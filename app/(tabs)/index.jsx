@@ -36,7 +36,7 @@ export default function TabOneScreen() {
   // console.log(dealerList, " Dealer list length: ", dealerList.length);
 
   const handlePress = () => {
-    navigation.navigate("newDanaDealer");
+    navigation.navigate("addDanaDealer");
   };
 
   function handleSearch(searchText) {
@@ -149,7 +149,7 @@ export default function TabOneScreen() {
                       flex: 1,
                       justifyContent: "flex-end",
                       alignItems: "stretch",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
                     }}
                     onPress={() => setDisplayOptions(false)}
                   >
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   },
   row: {
     display: 'flex',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
     flexDirection: 'row-reverse',
   },
   cancelText: {

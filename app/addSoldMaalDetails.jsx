@@ -1,18 +1,26 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { appColors } from "@/constants/appColors";
+import React, { useEffect, useState, useCallback } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const danaEntry = () => {
+const AddSoldMaalDetails = () => {
   const navigation = useNavigation();
   const route = useLocalSearchParams();
-  const { dealerName, dealerkey } = route;
+  const { dealerkey, dealerName } = route;
 
   const [fetchedList, setFetchedList] = useState([]);
   const [data, setData] = useState({
     date: "",
-    danaEntries: [{ danaType: "", rate: 0, totalBags: 0, bagWeight: 0 }],
+    bagsData: [{ color: "", rate: 0, totalBags: 0, bagWeight: 0 }],
     paidPayment: 0,
     duePayment: 0,
     totalPayment: 0,
@@ -21,7 +29,7 @@ const danaEntry = () => {
 
   const loadList = useCallback(async () => {
     try {
-      const list = await AsyncStorage.getItem("dana_entry");
+      const list = await AsyncStorage.getItem("sold_maal_entry");
       if (list !== null) {
         setFetchedList(JSON.parse(list));
       }
@@ -35,14 +43,19 @@ const danaEntry = () => {
   }, [loadList]);
 
   const handleSubmit = async () => {
-    if (data.date === "" || data.danaEntries.some((entry) => entry.danaType === "" || entry.rate === 0 || entry.totalBags === 0 || entry.bagWeight === 0)) {
+    if (
+      data.date === "" ||
+      data.bagsData.some(
+        (bag) => bag.rate === 0 || bag.totalBags === 0 || bag.bagWeight === 0
+      )
+    ) {
       Alert.alert("Please fill all data");
       return;
     }
 
     try {
       // Create a new object with the entered data and the generated key
-      const newDataEntry = { key: uniqueKey(), ...data };
+      const newEntry = { key: uniqueKey(), ...data };
 
       // Find the dealer in the fetched list
       const existingDealerIndex = fetchedList.findIndex(
@@ -50,12 +63,13 @@ const danaEntry = () => {
       );
 
       if (existingDealerIndex !== -1) {
-        fetchedList[existingDealerIndex].danaEntry.push(newDataEntry);
+        fetchedList[existingDealerIndex].soldEntry.push(newEntry);
       }
-      console.log(newDataEntry);
 
-      // Save the updated fetched list to AsyncStorage
-      await AsyncStorage.setItem("dana_entry", JSON.stringify(fetchedList));
+      await AsyncStorage.setItem(
+        "sold_maal_entry",
+        JSON.stringify(fetchedList)
+      );
 
       Alert.alert("Added successfully");
 
@@ -70,16 +84,16 @@ const danaEntry = () => {
   const handleAddEntry = () => {
     setData((prevData) => ({
       ...prevData,
-      danaEntries: [...prevData.danaEntries, { danaType: "", rate: 0, totalBags: 0, bagWeight: 0 }],
+      bagsData: [...prevData.bagsData, { rate: 0, totalBags: 0, bagWeight: 0 }],
     }));
   };
 
   const handleRemoveEntry = () => {
-    if (data.danaEntries.length > 1) {
+    if (data.bagsData.length > 1) {
       setData((prevData) => {
-        const newEntries = [...prevData.danaEntries];
-        newEntries.pop();
-        return { ...prevData, danaEntries: newEntries };
+        const newBagsData = [...prevData.bagsData];
+        newBagsData.pop();
+        return { ...prevData, bagsData: newBagsData };
       });
     }
   };
@@ -89,8 +103,8 @@ const danaEntry = () => {
   }
 
   const handleInputChanges = useCallback(() => {
-    const totalPayment = data.danaEntries.reduce(
-      (acc, entry) => acc + entry.rate * entry.totalBags * entry.bagWeight,
+    const totalPayment = data.bagsData.reduce(
+      (acc, bag) => acc + bag.rate * bag.totalBags * bag.bagWeight,
       0
     );
     const duePayment = totalPayment - data.paidPayment + data.backDue;
@@ -100,7 +114,7 @@ const danaEntry = () => {
       totalPayment,
       duePayment,
     }));
-  }, [data.danaEntries, data.paidPayment, data.backDue]);
+  }, [data.bagsData, data.paidPayment, data.backDue]);
 
   useEffect(() => {
     handleInputChanges();
@@ -108,48 +122,68 @@ const danaEntry = () => {
 
   useEffect(() => {
     if (dealerName) {
-      navigation.setOptions({ title: `${dealerName} Dana Entry` });
+      navigation.setOptions({ title: `${dealerName} Sold Product Entry` });
     }
-  }, [navigation, dealerName]);
+  }, [navigation]);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.label}>Date:</Text>
+        <Text style={styles.label}>date:</Text>
         <TextInput
           style={styles.input}
           value={data.date}
-          onChangeText={(text) => setData((prevData) => ({ ...prevData, date: text }))}
+          onChangeText={(text) =>
+            setData((prevData) => ({ ...prevData, date: text }))
+          }
+          keyboardType="numeric"
           placeholder="Enter date"
         />
       </View>
 
-      {data.danaEntries.map((entry, index) => (
-        <View key={index} style={{ display: "flex", flexDirection: "column", borderBottomWidth: 2, borderStyle: 'dashed', borderColor: appColors.black, paddingBottom: 10 }}>
+      {data.bagsData.map((bag, index) => (
+        <View
+          key={index}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            borderBottomWidth: 2,
+            borderStyle:'dashed',
+            borderColor: appColors.black,
+            paddingBottom: 10,
+          }}
+        >
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.label}>Dana Type</Text>
+              <Text style={styles.label}>Color</Text>
               <TextInput
                 style={[styles.input, { marginBottom: 0 }]}
-                value={entry.danaType}
                 onChangeText={(text) => {
-                  const newEntries = [...data.danaEntries];
-                  newEntries[index].danaType = text;
-                  setData((prevData) => ({ ...prevData, danaEntries: newEntries }));
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].color = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
                 }}
-                placeholder="Enter dana type"
+                keyboardType="default"
+                placeholder="Color"
               />
             </View>
 
             <View style={styles.col}>
-              <Text style={styles.label}>Rate/KG</Text>
+              <Text style={styles.label}>
+                Rate/KG
+              </Text>
               <TextInput
                 style={[styles.input, { marginBottom: 0 }]}
-                value={String(entry.rate)}
                 onChangeText={(text) => {
-                  const newEntries = [...data.danaEntries];
-                  newEntries[index].rate = parseInt(text) || 0;
-                  setData((prevData) => ({ ...prevData, danaEntries: newEntries }));
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].rate = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
                 }}
                 keyboardType="numeric"
                 placeholder="Enter rate"
@@ -159,14 +193,18 @@ const danaEntry = () => {
 
           <View style={styles.row}>
             <View style={styles.col}>
-              <Text style={styles.label}>Total Bags</Text>
+              <Text style={styles.label}>
+                Total Bags
+              </Text>
               <TextInput
                 style={[styles.input, { marginBottom: 0 }]}
-                value={String(entry.totalBags)}
                 onChangeText={(text) => {
-                  const newEntries = [...data.danaEntries];
-                  newEntries[index].totalBags = parseInt(text) || 0;
-                  setData((prevData) => ({ ...prevData, danaEntries: newEntries }));
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].totalBags = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
                 }}
                 keyboardType="numeric"
                 placeholder="Enter total bags"
@@ -174,14 +212,18 @@ const danaEntry = () => {
             </View>
 
             <View style={styles.col}>
-              <Text style={styles.label}>1 Bag Weight</Text>
+              <Text style={styles.label}>
+                1 Bag Wgt.
+              </Text>
               <TextInput
                 style={[styles.input, { marginBottom: 0 }]}
-                value={String(entry.bagWeight)}
                 onChangeText={(text) => {
-                  const newEntries = [...data.danaEntries];
-                  newEntries[index].bagWeight = parseInt(text) || 0;
-                  setData((prevData) => ({ ...prevData, danaEntries: newEntries }));
+                  const newBagsData = [...data.bagsData];
+                  newBagsData[index].bagWeight = text;
+                  setData((prevData) => ({
+                    ...prevData,
+                    bagsData: newBagsData,
+                  }));
                 }}
                 keyboardType="numeric"
                 placeholder="Enter bag weight"
@@ -203,35 +245,36 @@ const danaEntry = () => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Total:</Text>
-        <Text>₹ {data.totalPayment}</Text>
+        <Text>{data.totalPayment} Rupees</Text>
       </View>
 
       <View style={styles.row}>
         <Text style={styles.label}>Due Payment:</Text>
-        <Text>₹ {data.duePayment}</Text>
+        <Text>{data.duePayment} Rupees</Text>
       </View>
 
-      <View style={{ display: 'flex', flexDirection: 'col', width: '100%' }}>
-        <Text style={styles.label}>Paid Payment:</Text>
-        <TextInput
-          style={styles.input}
-          value={String(data.paidPayment)}
-          onChangeText={(text) => setData((prevData) => ({ ...prevData, paidPayment: parseInt(text) || 0 }))}
-          keyboardType="numeric"
-          placeholder="Enter paid payment"
-        />
-      </View>
+      <Text style={styles.label}>Paid Payment:</Text>
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        onChangeText={(text) =>
+          setData((prevData) => ({
+            ...prevData,
+            paidPayment: text,
+          }))
+        }
+        placeholder="Enter total payment"
+      />
 
-      <View style={{ display: 'flex', flexDirection: 'col', width: '100%' }}>
-        <Text style={styles.label}>Back Due:</Text>
-        <TextInput
-          style={styles.input}
-          value={String(data.backDue)}
-          onChangeText={(text) => setData((prevData) => ({ ...prevData, backDue: parseInt(text) || 0 }))}
-          keyboardType="numeric"
-          placeholder="Enter back due"
-        />
-      </View>
+      <Text style={styles.label}>Back Due:</Text>
+      <TextInput
+        style={styles.input}
+        keyboardType="numeric"
+        onChangeText={(text) =>
+          setData((prevData) => ({ ...prevData, backDue: parseInt(text) }))
+        }
+        placeholder="Back Due Balance"
+      />
 
       <TouchableOpacity style={styles.submit} onPress={handleSubmit}>
         <Text style={styles.submitText}>Submit</Text>
@@ -240,13 +283,13 @@ const danaEntry = () => {
   );
 };
 
-export default danaEntry;
+export default AddSoldMaalDetails;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 18,
-    backgroundColor: appColors.white
+    backgroundColor:appColors.white
   },
   label: {
     fontSize: 15,
@@ -267,13 +310,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 40,
     borderRadius: 10,
-    backgroundColor: appColors.blue,
+    backgroundColor: appColors.yellow,
   },
   submitText: {
     padding: 10,
     fontSize: 20,
     textAlign: "center",
-    color: appColors.white,
+    color: appColors.black,
   },
   row: {
     gap: 10,
@@ -302,11 +345,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: appColors.blue,
+    backgroundColor: appColors.black,
   },
   addButtonText: {
     fontSize: 30,
     fontWeight: "bold",
-    color: appColors.white,
+    color: appColors.yellow,
   },
 });

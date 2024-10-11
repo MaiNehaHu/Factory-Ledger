@@ -83,7 +83,7 @@ const SoldEntry = () => {
 
   React.useEffect(() => {
     if (dealerName) {
-      navigation.setOptions({ title: dealerName });
+      navigation.setOptions({ title: `${dealerName}'s List` });
     }
   }, [dealerName, navigation]);
 
@@ -222,7 +222,7 @@ const SoldEntry = () => {
         style={styles.addButton}
         onPress={() => {
           router.push({
-            pathname: "/soldentry",
+            pathname: "/addSoldMaalDetails",
             params: { dealerkey, dealerName },
           });
         }}

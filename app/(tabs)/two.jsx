@@ -27,7 +27,7 @@ export default function TabTwoScreen() {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate('newSellingDealer'); // Replace 'YourPage' with the name of your page component
+    navigation.navigate('addSellingDealer'); // Replace 'YourPage' with the name of your page component
   };
 
   function handleSearch(searchText) {
@@ -136,7 +136,7 @@ export default function TabTwoScreen() {
                       flex: 1,
                       justifyContent: "flex-end",
                       alignItems: "stretch",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
                     }}
                     onPress={() => setDisplayOptions(false)}
                   >

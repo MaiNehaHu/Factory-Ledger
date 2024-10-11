@@ -13,8 +13,9 @@
     "**/*.tsx",
     "app/(tabs)/two.jsx",
     "app/(tabs)/index.jsx",
-    "app/danaentry.jsx",
-    "app/soldentry.jsx",
-    "app/danaEntryDataPage.jsx"
+    "app/addDanaDetails.jsx",
+    "app/addSoldMaalDetails.jsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ]
 }

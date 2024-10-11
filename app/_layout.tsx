@@ -5,6 +5,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { appColors } from "../constants/appColors";
+import { Image } from "react-native";
+
+const headerBlueImage = require("@/assets/images/blue-no-bg.png");
+const headerImage = require("@/assets/images/icon-no-bg.png");
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,19 +60,39 @@ function RootLayoutNav() {
 
         {/**Tab one and two are below */}
         <Stack.Screen
-          name="danaentry"
+          name="addDanaDetails"
           options={{
-            title: "Add Dana Entry",
+            title: "Add Material Entry",
             headerStyle: { backgroundColor: appColors.blue },
             headerTintColor: appColors.white,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
-          name="soldentry"
+          name="addSoldMaalDetails"
           options={{
-            title: "Sold Maal Entry",
+            title: "Sold Product Entry",
             headerStyle: { backgroundColor: appColors.yellow },
             headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
 
@@ -76,75 +100,171 @@ function RootLayoutNav() {
         <Stack.Screen
           name="danaentryData/[index]"
           options={{
-            title: "Dana Entry Data",
+            title: "Material Entry Data",
             headerStyle: { backgroundColor: appColors.blue },
             headerTintColor: appColors.white,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
           name="soldentryData/[index]"
           options={{
-            title: "Sold Maal Data",
+            title: "Sold Product Data",
             headerStyle: { backgroundColor: appColors.yellow },
             headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
 
         {/**Add a new dealer */}
         <Stack.Screen
-          name="newDanaDealer"
+          name="addDanaDealer"
           options={{
             title: "Add New Dealer",
             headerStyle: { backgroundColor: appColors.blue },
             headerTintColor: appColors.white,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
-          name="newSellingDealer"
+          name="addSellingDealer"
           options={{
             title: "Add New Dealer",
             headerStyle: { backgroundColor: appColors.yellow },
             headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
+
+        {/**Data Page */}
         <Stack.Screen
           name="danaEntryDataPage"
           options={{
             title: "Entry Data",
             headerStyle: { backgroundColor: appColors.white },
             headerTintColor: appColors.blue,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
+        <Stack.Screen
+          name="sellingEntryDataPage"
+          options={{
+            title: "Selling Product Entry",
+            headerStyle: { backgroundColor: appColors.white },
+            headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
+          }}
+        />
+
+        {/*Edit entry   */}
         <Stack.Screen
           name="editDanaEntry"
           options={{
             title: "Edit Entry Data",
             headerStyle: { backgroundColor: appColors.blue },
             headerTintColor: appColors.white,
-          }}
-        />
-        <Stack.Screen
-          name="sellingEntryDataPage"
-          options={{
-            title: "Selling Maal Entry",
-            headerStyle: { backgroundColor: appColors.white },
-            headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
           name="editSellingEntry"
           options={{
-            title: "Edit Selling Maal Entry",
+            title: "Edit Selling Product Entry",
             headerStyle: { backgroundColor: appColors.yellow },
             headerTintColor: appColors.black,
+             headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
+
+        {/**Edit dealer data */}
         <Stack.Screen
           name="editDanaDealerData"
           options={{
             title: "Edit Dealer Details",
             headerStyle: { backgroundColor: appColors.blue },
             headerTintColor: appColors.white,
+            headerRight: () => (
+              <Image
+                source={headerImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
@@ -153,6 +273,16 @@ function RootLayoutNav() {
             title: "Edit Dealer Details",
             headerStyle: { backgroundColor: appColors.yellow },
             headerTintColor: appColors.black,
+            headerRight: () => (
+              <Image
+                source={headerBlueImage}
+                style={{
+                  width: 40,
+                  height: 40,
+                  objectFit: "contain",
+                }}
+              />
+            ),
           }}
         />
       </Stack>
