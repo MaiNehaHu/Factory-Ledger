@@ -12,29 +12,24 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nehakumari0102.papakabusiness"
+      "bundleIdentifier": "com.factory.ledger"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nehakumari0102.papakabusiness"
+      "package": "com.factory.ledger"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },
@@ -43,14 +38,11 @@
         "origin": false
       },
       "eas": {
-        "projectId": "57a60823-b605-4b7e-bc1a-0b27c7162e9d"
+        "projectId": "04a0ffe1-9aa0-4b19-b5df-f3c726de1c41"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/57a60823-b605-4b7e-bc1a-0b27c7162e9d"
     },
     "owner": "nehakumari0102"
   }
