@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.factory.ledger"
+      "package": "com.factory.ledger",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
