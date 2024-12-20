@@ -57,6 +57,11 @@ eas update --branch main --message "Your update message"
 eas build -p android --profile preview
 expo publish
 ```
+or
+```
+npx expo prebuild
+eas build -p android --profile preview
+```
 
 ### Dependencies version changes
 ```
