@@ -8,11 +8,18 @@ npx create-expo-app@latest -t
 3. Give name
 4. Then install expo-cli
 ```
-npm i -g expo-cli
+npm i -g expo-cli (skip in SDK 52)
 ```
 5. Start the app in phone by using or the Emulator by using the command
 ```
-npm start
+npm start (skip in SDK 2)
+```
+```
+npx expo start --no-dev --minify
+```
+or
+```
+npx expo start --clear
 ```
 
 ### If not using Android Studio. Use your phone and install Expo Go App. Scan the QR. All Set.
