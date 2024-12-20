@@ -48,6 +48,7 @@ npm install -g eas-cli
 eas update:configure
 eas update --branch main --message "Your update message"
 eas build -p android --profile preview
+expo publish
 ```
 
 ### Dependencies version changes
